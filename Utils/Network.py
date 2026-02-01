@@ -1,7 +1,16 @@
-import json
-import subprocess
+import requests
+import time
+
+session = requests.Session()
+session.headers.update({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache'
+})
 
 def fetch_data():
-    result = subprocess.run(['curl', 'http://127.0.0.1:8000/'], capture_output=True, text=True)
-    if result.returncode == 0:
-        return json.loads(result.stdout)
+    bust = int(time.time())
+    response = requests.get(f"http://127.0.0.1:8000/record/10000?_={bust}", headers={'Cache-Control': 'no-cache'})
+    if response.status_code == 200:
+        return response.json()
+    else:
+        response.raise_for_status()

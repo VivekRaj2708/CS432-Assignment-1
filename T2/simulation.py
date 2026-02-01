@@ -6,7 +6,7 @@ import random
 import asyncio
 import json
 
-random.seed(42)
+# random.seed(42)
 app = FastAPI()
 faker = Faker()
 
