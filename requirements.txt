@@ -3,3 +3,7 @@ uvicorn
 faker
 sse-starlette
 requests
+tabulate
+hpttx
+pytest
+pytest-asyncio
