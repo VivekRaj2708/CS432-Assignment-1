@@ -8,7 +8,15 @@ from pickle import dumps, loads
 class MapRegister:
     def __init__(self):
         self.map = {}
-        self.super = {}
+    
+    def __getitem__(self, key):
+        return self.map[key]
+    
+    def __contains__(self, item):
+        return item in self.map
+    
+    def __iter__(self):
+        return iter(self.map)
 
     def ResolveRequest(self, request):
         for key in request:
