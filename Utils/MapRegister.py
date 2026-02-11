@@ -46,7 +46,7 @@ class MapRegister:
             filename = "map_register.pkl"
         if not os.path.exists(filename):
             logger.error(f"File {filename} does not exist; cannot load MapRegister")
-            raise FileNotFoundError(f"{filename} not found")
+            return
         with open(filename, "rb") as f:
             self.map = loads(f.read())
         logger.info(f"MapRegister loaded from {filename}")

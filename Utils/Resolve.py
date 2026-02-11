@@ -197,7 +197,7 @@ class Metadata:
         elif self.type == "int":
             try:
                 return int(value)
-            except ValueError:
+            except (ValueError, TypeError):
                 logger.warning(
                     f"Type change detected: cannot convert {value} to int; trying allowed transitions"
                 )
@@ -208,7 +208,7 @@ class Metadata:
         elif self.type == "str":
             try:
                 return str(value)
-            except ValueError:
+            except (ValueError, TypeError):
                 logger.warning(
                     f"Type change detected: cannot convert {value} to str; trying allowed transitions"
                 )
@@ -217,7 +217,7 @@ class Metadata:
         elif self.type == "float":
             try:
                 return float(value)
-            except ValueError:
+            except (ValueError, TypeError):
                 logger.warning(
                     f"Type change detected: cannot convert {value} to float; trying allowed transitions"
                 )
@@ -226,7 +226,7 @@ class Metadata:
         elif self.type == "bool":
             try:
                 return ResolveBool(value)
-            except ValueError:
+            except (ValueError, TypeError):
                 logger.warning(
                     f"Type change detected: cannot convert {value} to bool; trying allowed transitions"
                 )
