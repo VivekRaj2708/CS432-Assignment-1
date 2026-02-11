@@ -72,6 +72,8 @@ class Metadata:
 
     def convert_scalar(self, target_type, value):
         if target_type == "int":
+            if isinstance(value, float) and not value.is_integer():
+                raise ValueError(f"Cannot convert non-integer float {value} to int")
             return int(value)
         if target_type == "float":
             return float(value)
