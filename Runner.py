@@ -5,6 +5,7 @@ from collections import deque
 
 async def Main(queue, stop_event):
     register = MapRegister()
+    register.Load("final_map_register.pkl")
     printed = 0
     # Start the streaming task INSIDE the loop
     task = asyncio.create_task(
@@ -18,7 +19,7 @@ async def Main(queue, stop_event):
 
     try:
         # print first 10 records as a quick smoke test
-        while printed < 100:
+        while printed < 1000:
             if queue:
                 record = queue.popleft()
                 # print(record)
@@ -29,6 +30,7 @@ async def Main(queue, stop_event):
     finally:
         stop_event.set()
         print(register)
+        register.Save("final_map_register.pkl")
         await task # Now we safely await the task we created
 
 async def main():
