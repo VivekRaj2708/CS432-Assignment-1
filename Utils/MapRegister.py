@@ -18,22 +18,41 @@ class MapRegister:
     def __iter__(self):
         return iter(self.map)
 
+    def resolve_nested_list(self, key, items):
+        for item in items:
+            if isinstance(item, dict):
+                if key not in self.map or not isinstance(self.map[key], MapRegister):
+                    self.map[key] = MapRegister()
+                    logger.info(f"Created new MapRegister for key: {key}")
+                self.map[key].ResolveRequest(item)
+            elif isinstance(item, list):
+                self.resolve_nested_list(key, item)
+
     def ResolveRequest(self, request):
         for key in request:
             # print(f"Resolving key: {key} with value: {request[key]}")
-            if isinstance(request[key], dict):
+            value = request[key]
+            if isinstance(value, dict):
                 # print(f"Key {key} is a nested dict; delegating to super MapRegister")
-                if key not in self.super:
+                if key not in self.map or not isinstance(self.map[key], MapRegister):
                     self.map[key] = MapRegister()
                     logger.info(f"Created new MapRegister for key: {key}")
-                self.map[key].ResolveRequest(request[key])
+                self.map[key].ResolveRequest(value)
                 # print(f"Finished resolving nested dict for key: {key}")
                 # print(f"Current state of super[{key}]: {self.map[key]}")
+            elif isinstance(value, list):
+                if any(isinstance(item, (dict, list)) for item in value):
+                    self.resolve_nested_list(key, value)
+                elif key in self.map:
+                    self.map[key].resolveValue(value)
+                else:
+                    self.map[key] = Metadata(type_="UNK")
+                    self.map[key].resolveValue(value)
             elif key in self.map:
-                self.map[key].resolveValue(request[key])
+                self.map[key].resolveValue(value)
             else:
                 self.map[key] = Metadata(type_="UNK")
-                self.map[key].resolveValue(request[key])
+                self.map[key].resolveValue(value)
     
     def __repr__(self):
         # print("MapRegister __repr__ called; preparing tabulated output")
