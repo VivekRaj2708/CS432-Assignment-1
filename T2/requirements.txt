@@ -2,3 +2,5 @@ fastapi
 uvicorn
 faker
 sse-starlette
+requests
+httpx
