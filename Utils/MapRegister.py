@@ -12,11 +12,15 @@ class MapRegister:
 
     def ResolveRequest(self, request):
         for key in request:
+            # print(f"Resolving key: {key} with value: {request[key]}")
             if isinstance(request[key], dict):
+                # print(f"Key {key} is a nested dict; delegating to super MapRegister")
                 if key not in self.super:
-                    self.super[key] = MapRegister()
+                    self.map[key] = MapRegister()
                     logger.info(f"Created new MapRegister for key: {key}")
-                self.super[key].ResolveRequest(request[key])
+                self.map[key].ResolveRequest(request[key])
+                # print(f"Finished resolving nested dict for key: {key}")
+                # print(f"Current state of super[{key}]: {self.map[key]}")
             elif key in self.map:
                 self.map[key].resolveValue(request[key])
             else:
@@ -24,6 +28,8 @@ class MapRegister:
                 self.map[key].resolveValue(request[key])
     
     def __repr__(self):
+        # print("MapRegister __repr__ called; preparing tabulated output")
+        # print(f"Current map contents: {self.map}")
         return tabulate([[k, v] for k, v in self.map.items()], headers=["Key", "Metadata"], tablefmt="grid")
 
     def Save(self, filename=None):
