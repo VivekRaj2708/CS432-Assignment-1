@@ -50,5 +50,6 @@ class MapRegister:
         with open(filename, "rb") as f:
             self.map = loads(f.read())
         logger.info(f"MapRegister loaded from {filename}")
+        logger.info(f"Loaded Data: \n{self}")
         
     

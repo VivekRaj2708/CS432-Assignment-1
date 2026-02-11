@@ -49,6 +49,75 @@ class Metadata:
             return f"Metadata(array<{sub}>)"
         return f"Metadata(type={self.type}{', AUTO' if self.auto else ''})"
 
+    def reset_to_unk(self):
+        self.type = "UNK"
+        self.subtype = None
+        self.auto = False
+
+    def re_resolve_as_unk(self, value, reason):
+        logger.warning(reason)
+        self.reset_to_unk()
+        return self.resolveValue(value)
+
+    def normalize_list(self, value):
+        if isinstance(value, str):
+            try:
+                value = loads(value)
+            except Exception:
+                import ast
+                value = ast.literal_eval(value)
+        if not isinstance(value, list):
+            raise ValueError(f"Expected list, got {type(value)}")
+        return value
+
+    def convert_scalar(self, target_type, value):
+        if target_type == "int":
+            return int(value)
+        if target_type == "float":
+            return float(value)
+        if target_type == "bool":
+            return ResolveBool(value)
+        if target_type == "str":
+            return str(value)
+        raise ValueError(f"Unsupported scalar type {target_type}")
+
+    def convert_list(self, subtype, value):
+        value = self.normalize_list(value)
+        return [self.convert_scalar(subtype, x) for x in value]
+
+    def try_allowed_transitions(self, value, allowed_targets):
+        last_error = None
+        for target in allowed_targets:
+            try:
+                if target.startswith("list:"):
+                    subtype = target.split(":", 1)[1]
+                    converted = self.convert_list(subtype, value)
+                    self.type = "list"
+                    self.subtype = Metadata(type_=subtype)
+                    self.auto = False
+                    return converted
+                converted = self.convert_scalar(target, value)
+                self.type = target
+                self.subtype = None
+                self.auto = False
+                return converted
+            except Exception as e:
+                last_error = e
+        raise ValueError(f"Type change not allowed or failed: {last_error}")
+
+    def get_allowed_list_subtypes(self):
+        if self.subtype is None:
+            return ["int", "float", "bool", "str"]
+        if self.subtype.type == "int":
+            return ["int", "float", "str"]
+        if self.subtype.type == "float":
+            return ["float", "str"]
+        if self.subtype.type == "bool":
+            return ["bool", "int", "float", "str"]
+        if self.subtype.type == "str":
+            return ["str"]
+        return ["int", "float", "bool", "str"]
+
     def resolveValue(self, value=None):
         if self.auto:
             self.current_value += 1
@@ -129,58 +198,74 @@ class Metadata:
             try:
                 return int(value)
             except ValueError:
-                logger.error(f"Cannot convert value {value} to int")
-                raise ValueError(f"Cannot convert value {value} to int")
+                logger.warning(
+                    f"Type change detected: cannot convert {value} to int; trying allowed transitions"
+                )
+                return self.try_allowed_transitions(
+                    value, ["float", "list:int", "list:float", "str"]
+                )
         
         elif self.type == "str":
             try:
                 return str(value)
             except ValueError:
-                logger.error(f"Cannot convert value {value} to str")
-                raise ValueError(f"Cannot convert value {value} to str")
+                logger.warning(
+                    f"Type change detected: cannot convert {value} to str; trying allowed transitions"
+                )
+                return self.try_allowed_transitions(value, ["list:str"])
         
         elif self.type == "float":
             try:
                 return float(value)
             except ValueError:
-                logger.error(f"Cannot convert value {value} to float")
-                raise ValueError(f"Cannot convert value {value} to float")
+                logger.warning(
+                    f"Type change detected: cannot convert {value} to float; trying allowed transitions"
+                )
+                return self.try_allowed_transitions(value, ["list:float", "str"])
         
         elif self.type == "bool":
             try:
                 return ResolveBool(value)
             except ValueError:
-                logger.error(f"Cannot convert value {value} to bool")
-                raise ValueError(f"Cannot convert value {value} to bool")
+                logger.warning(
+                    f"Type change detected: cannot convert {value} to bool; trying allowed transitions"
+                )
+                return self.try_allowed_transitions(
+                    value, ["int", "float", "list:int", "list:float", "str"]
+                )
         
         elif self.type == "list":
             try:
-                # 1. Normalize input to a list
-                if isinstance(value, str):
-                    try:
-                        value = loads(value)
-                    except Exception:
-                        # Fallback for non-strict JSON
-                        import ast
-                        value = ast.literal_eval(value)
-                
-                if not isinstance(value, list):
-                    raise ValueError(f"Expected list, got {type(value)}")
-
-                # 2. Ensure subtype exists (even if we didn't have one before)
                 if self.subtype is None:
                     self.subtype = Metadata(type_="UNK")
+                if self.subtype.type == "UNK":
+                    value = self.normalize_list(value)
+                    return_list_data = []
+                    if len(value) > 0:
+                        self.subtype = Metadata(type_="UNK")
+                        for x in value:
+                            return_list_data.append(self.subtype.resolveValue(x))
+                    return return_list_data
 
-                # 3. Process elements
-                return_list_data = []
-                for x in value:
-                    return_list_data.append(self.subtype.resolveValue(x))
-                
-                return return_list_data # Ensure this is returned!
+                return self.convert_list(self.subtype.type, value)
 
             except Exception as e:
-                logger.error(f"List resolution failed: {e}")
-                raise ValueError(f"Cannot convert value to list: {value}")
+                logger.warning(
+                    f"Type change detected while resolving list: {e}; trying allowed subtype transitions"
+                )
+                try:
+                    value = self.normalize_list(value)
+                    for subtype in self.get_allowed_list_subtypes():
+                        try:
+                            return_list_data = [self.convert_scalar(subtype, x) for x in value]
+                            self.subtype = Metadata(type_=subtype)
+                            return return_list_data
+                        except Exception:
+                            continue
+                    raise ValueError(f"Cannot convert list elements with allowed subtypes")
+                except Exception as inner:
+                    logger.error(f"List resolution failed: {inner}")
+                    raise ValueError(f"Cannot convert value to list: {value}")
         
         else:
             logger.error(f"Unsupported Metadata type {self.type}")
