@@ -1,58 +1,48 @@
-from Utils.Algo import levenshtein_distance
+import os
+from Utils.Log import logger
+from Utils.Resolve import Metadata
+from tabulate import tabulate
+from pickle import dumps, loads
+
 
 class MapRegister:
     def __init__(self):
         self.map = {}
         self.super = {}
-        
-    def __normalize(self, key):
-        if not isinstance(key, (str, int, float)):
-            return str(key)
-        # Handle Type Drifting: coerce to string and strip formatting
-        s = str(key).lower()
-        return "".join(filter(str.isalnum, s))
 
-    def GetClosest(self, label):
-        norm_label = self.__normalize(label)
-        if not norm_label: return None
-        
-        keys = list(self.super.keys())
-        best_match = None
-        highest_similarity = 0.0
-
-        for key in keys:
-            norm_key = self.__normalize(key)
-            
-            # 1. Direct Normalized Match (Case/Snake/Camel issues)
-            if norm_label == norm_key:
-                return key
-
-            # 2. Heuristic: Common Prefix/Substring (Handles IP vs IPAddress)
-            # If one starts with the other and they are reasonably similar in length
-            if norm_key.startswith(norm_label) or norm_label.startswith(norm_key):
-                # Calculate "Overlap Ratio"
-                ratio = min(len(norm_label), len(norm_key)) / max(len(norm_label), len(norm_key))
-                if ratio > 0.4: # Adjustable threshold: 'ip' (2) vs 'ipaddress' (9) = 0.22 (might need lower)
-                    return key
-
-            # 3. Fuzzy fallback for typos
-            dist = levenshtein_distance(norm_label, norm_key)
-            # Normalize distance by string length so 'id' vs 'is' isn't the same as 'address' vs 'addresz'
-            similarity = 1 - (dist / max(len(norm_label), len(norm_key)))
-            
-            if similarity > 0.8 and similarity > highest_similarity:
-                highest_similarity = similarity
-                best_match = key
-        
-        return best_match
+    def ResolveRequest(self, request):
+        for key in request:
+            if isinstance(request[key], dict):
+                if key not in self.super:
+                    self.super[key] = MapRegister()
+                    logger.info(f"Created new MapRegister for key: {key}")
+                self.super[key].ResolveRequest(request[key])
+            elif key in self.map:
+                self.map[key].resolveValue(request[key])
+            else:
+                self.map[key] = Metadata(type_="UNK")
+                self.map[key].resolveValue(request[key])
     
-    def AddToRegister(self, duplicate, value):
-        self.map[duplicate] = value
-        self.super[value].append(duplicate)
-    
-    def AddNewKey(self, key):
-        self.map[key] = key
-        self.super[key] = []
+    def __repr__(self):
+        return tabulate([[k, v] for k, v in self.map.items()], headers=["Key", "Metadata"], tablefmt="grid")
 
-    def CheckInRegister(self, key):
-        return self.map.get(key, None)
+    def Save(self, filename=None):
+        if filename is None:
+            logger.warning("No filename provided for Save; using default 'map_register.pkl'")
+            filename = "map_register.pkl"
+        with open(filename, "wb") as f:
+            f.write(dumps(self.map))
+        logger.info(f"MapRegister saved to {filename}")
+    
+    def Load(self, filename=None):
+        if filename is None:
+            logger.warning("No filename provided for Load; using default 'map_register.pkl'")
+            filename = "map_register.pkl"
+        if not os.path.exists(filename):
+            logger.error(f"File {filename} does not exist; cannot load MapRegister")
+            raise FileNotFoundError(f"{filename} not found")
+        with open(filename, "rb") as f:
+            self.map = loads(f.read())
+        logger.info(f"MapRegister loaded from {filename}")
+        
+    

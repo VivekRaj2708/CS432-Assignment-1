@@ -7,3 +7,5 @@ tabulate
 hpttx
 pytest
 pytest-asyncio
+pandas
+tabulate
