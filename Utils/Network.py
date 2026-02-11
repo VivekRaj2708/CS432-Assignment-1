@@ -73,6 +73,7 @@ async def stream_sse_records(count: int, queue: deque,
                             data_str = line[len('data: '):].strip()
                             try:
                                 record = json.loads(data_str)
+                                record['t_stamp'] = time.time() # Add timestamp for debugging
                                 queue.append(record)
                             except json.JSONDecodeError as exc:
                                 logger.warning('Failed to parse JSON from SSE data: %s', exc)
