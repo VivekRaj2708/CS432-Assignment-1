@@ -32,7 +32,9 @@ class MapRegister:
                         "table_map": self.map[key]
                     })
                     while r:
-                        updateOrder.append(r.popleft())
+                        a = r.popleft()
+                        a["table_name"] = key
+                        updateOrder.append(a)
                     logger.info(f"Created new MapRegister for key: {key}")
                 else:
                     self.map[key].ResolveRequest(item, updateOrder=updateOrder)
@@ -59,7 +61,9 @@ class MapRegister:
                         "table_map": self.map[key]
                     })
                     while r:
-                        updateOrder.append(r.popleft())
+                        a = r.popleft()
+                        a["table_name"] = key
+                        updateOrder.append(a)
                     logger.info(f"Created new MapRegister for key: {key}")
                     insert_columns.append(key)
                     insert_values.append(child_id)
