@@ -30,6 +30,8 @@ async def Main(queue, stop_event):
                 await asyncio.sleep(0.1)
     finally:
         stop_event.set()
+        with open("Map.log", "w") as f:
+            f.write(repr(register))
         for update in updates:
             print(update)
         register.Save("final_map_register.pkl")
