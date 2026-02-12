@@ -199,3 +199,7 @@ Logs are written to `logs.log` by default. Configure logging in `Utils/Log.py`.
 1. **Vivek Raj** ([@VivekRaj2005](https://github.com/VivekRaj2005))
 - **Roll Number:** 23110362
 - **Email:** [vivek.raj@iitgn.ac.in](mailto:vivek.raj@iitgn.ac.in )
+
+2. **Pavitr Chandwani** ([@Pav1tr](https://github.com/Pav1tr))
+- **Roll Number:** 23110241
+- **Email:** [pavitr.chandwani@iitgn.ac.in](mailto:pavitr.chandwani@iitgn.ac.in )
