@@ -7,7 +7,8 @@ from collections import deque
 
 
 class MapRegister:
-    def __init__(self):
+    def __init__(self, table_name="root"):
+        self.table_name = table_name
         self.map = {"table_autogen_id": Metadata(type_="int", auto=True)}
 
     def __getitem__(self, key):
@@ -23,19 +24,18 @@ class MapRegister:
         for item in items:
             if isinstance(item, dict):
                 if key not in self.map or not isinstance(self.map[key], MapRegister):
-                    self.map[key] = MapRegister()
+                    child_table_name = f"{self.table_name}_{key}"
+                    self.map[key] = MapRegister(table_name=child_table_name)
                     r = deque()
                     self.map[key].ResolveRequest(item, r)
                     updateOrder.append({
                         "type": "CREATE",
-                        "table_name": key,
+                        "table_name": child_table_name,
                         "table_map": self.map[key]
                     })
                     while r:
-                        a = r.popleft()
-                        a["table_name"] = key
-                        updateOrder.append(a)
-                    logger.info(f"Created new MapRegister for key: {key}")
+                        updateOrder.append(r.popleft())
+                    logger.info(f"Created new MapRegister for key: {key} with table name: {child_table_name}")
                 else:
                     self.map[key].ResolveRequest(item, updateOrder=updateOrder)
             elif isinstance(item, list):
@@ -52,19 +52,18 @@ class MapRegister:
             value = request[key]
             if isinstance(value, dict):
                 if key not in self.map or not isinstance(self.map[key], MapRegister):
-                    self.map[key] = MapRegister()
+                    child_table_name = f"{self.table_name}_{key}"
+                    self.map[key] = MapRegister(table_name=child_table_name)
                     r = deque()
                     child_id = self.map[key].ResolveRequest(value, r)
                     updateOrder.append({
                         "type": "CREATE",
-                        "table_name": key,
+                        "table_name": child_table_name,
                         "table_map": self.map[key]
                     })
                     while r:
-                        a = r.popleft()
-                        a["table_name"] = key
-                        updateOrder.append(a)
-                    logger.info(f"Created new MapRegister for key: {key}")
+                        updateOrder.append(r.popleft())
+                    logger.info(f"Created new MapRegister for key: {key} with table name: {child_table_name}")
                     insert_columns.append(key)
                     insert_values.append(child_id)
                 else:
@@ -84,6 +83,7 @@ class MapRegister:
                     if updateOrder is not None:
                         updateOrder.append({
                             "type": "ALTER",
+                            "table_name": self.table_name,
                             "column_name": key,
                             "old_type": None,
                             "new_type": self.map[key].type if self.map[key].type != "list" else f"list<{self.map[key].subtype.type}>"
@@ -100,6 +100,7 @@ class MapRegister:
                 if updateOrder is not None:
                     updateOrder.append({
                         "type": "ALTER",
+                        "table_name": self.table_name,
                         "column_name": key,
                         "old_type": None,
                         "new_type": self.map[key].type if self.map[key].type != "list" else f"list<{self.map[key].subtype.type}>"
@@ -111,6 +112,7 @@ class MapRegister:
         if updateOrder is not None:
             updateOrder.append({
                 "type": "INSERT",
+                "table_name": self.table_name,
                 "columns": insert_columns,
                 "values": insert_values
             })
