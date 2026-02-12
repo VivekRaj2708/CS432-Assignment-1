@@ -3,11 +3,13 @@ from Utils.Log import logger
 from Utils.Resolve import Metadata
 from tabulate import tabulate
 from pickle import dumps, loads
+from collections import deque
 
 
 class MapRegister:
     def __init__(self):
-        self.map = {}
+        self.map = {"table_autogen_id": Metadata(type_="int", auto=True)}
+
     
     def __getitem__(self, key):
         return self.map[key]
@@ -18,31 +20,48 @@ class MapRegister:
     def __iter__(self):
         return iter(self.map)
 
-    def resolve_nested_list(self, key, items):
+    def resolve_nested_list(self, key, items, updateOrder: deque=None):
         for item in items:
             if isinstance(item, dict):
                 if key not in self.map or not isinstance(self.map[key], MapRegister):
                     self.map[key] = MapRegister()
+                    r = deque()
+                    self.map[key].ResolveRequest(item, r)
+                    updateOrder.append({
+                        "type": "CREATE",
+                        "table_name": key,
+                        "table_map": self.map[key]
+                    })
+                    while r:
+                        updateOrder.append(r.popleft())
                     logger.info(f"Created new MapRegister for key: {key}")
-                self.map[key].ResolveRequest(item)
+                else:
+                    self.map[key].ResolveRequest(item, updateOrder=updateOrder)
             elif isinstance(item, list):
-                self.resolve_nested_list(key, item)
+                self.resolve_nested_list(key, item, updateOrder=updateOrder)
 
-    def ResolveRequest(self, request):
+    def ResolveRequest(self, request, updateOrder=None):
+        table_autogen_id = self.map['table_autogen_id'].resolveValue(queue=updateOrder) # Increment the auto ID for each request
         for key in request:
-            # print(f"Resolving key: {key} with value: {request[key]}")
             value = request[key]
             if isinstance(value, dict):
-                # print(f"Key {key} is a nested dict; delegating to super MapRegister")
                 if key not in self.map or not isinstance(self.map[key], MapRegister):
                     self.map[key] = MapRegister()
+                    r = deque()
+                    self.map[key].ResolveRequest(value, r)
+                    updateOrder.append({
+                        "type": "CREATE",
+                        "table_name": key,
+                        "table_map": self.map[key]
+                    })
+                    while r:
+                        updateOrder.append(r.popleft())
                     logger.info(f"Created new MapRegister for key: {key}")
-                self.map[key].ResolveRequest(value)
-                # print(f"Finished resolving nested dict for key: {key}")
-                # print(f"Current state of super[{key}]: {self.map[key]}")
+                else:
+                    self.map[key].ResolveRequest(value, updateOrder=updateOrder)
             elif isinstance(value, list):
                 if any(isinstance(item, (dict, list)) for item in value):
-                    self.resolve_nested_list(key, value)
+                    self.resolve_nested_list(key, value, updateOrder=updateOrder)
                 elif key in self.map:
                     self.map[key].resolveValue(value)
                 else:

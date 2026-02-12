@@ -120,7 +120,8 @@ class Metadata:
             return ["str"]
         return ["int", "float", "bool", "str"]
 
-    def resolveValue(self, value=None):
+    def resolveValue(self, value=None, queue=None):
+        assert not queue, "Queue parameter is required to generate the SQL Query"
         if self.auto:
             self.current_value += 1
             return self.current_value
