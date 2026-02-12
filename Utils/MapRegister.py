@@ -10,7 +10,6 @@ class MapRegister:
     def __init__(self):
         self.map = {"table_autogen_id": Metadata(type_="int", auto=True)}
 
-    
     def __getitem__(self, key):
         return self.map[key]
     
@@ -42,13 +41,18 @@ class MapRegister:
 
     def ResolveRequest(self, request, updateOrder=None):
         table_autogen_id = self.map['table_autogen_id'].resolveValue(queue=updateOrder) # Increment the auto ID for each request
+        
+        # Collect resolved values for INSERT
+        insert_columns = []
+        insert_values = []
+        
         for key in request:
             value = request[key]
             if isinstance(value, dict):
                 if key not in self.map or not isinstance(self.map[key], MapRegister):
                     self.map[key] = MapRegister()
                     r = deque()
-                    self.map[key].ResolveRequest(value, r)
+                    child_id = self.map[key].ResolveRequest(value, r)
                     updateOrder.append({
                         "type": "CREATE",
                         "table_name": key,
@@ -57,21 +61,57 @@ class MapRegister:
                     while r:
                         updateOrder.append(r.popleft())
                     logger.info(f"Created new MapRegister for key: {key}")
+                    insert_columns.append(key)
+                    insert_values.append(child_id)
                 else:
-                    self.map[key].ResolveRequest(value, updateOrder=updateOrder)
+                    child_id = self.map[key].ResolveRequest(value, updateOrder=updateOrder)
+                    insert_columns.append(key)
+                    insert_values.append(child_id)
             elif isinstance(value, list):
                 if any(isinstance(item, (dict, list)) for item in value):
                     self.resolve_nested_list(key, value, updateOrder=updateOrder)
                 elif key in self.map:
-                    self.map[key].resolveValue(value)
+                    resolved_val = self.map[key].resolveValue(value, queue=updateOrder, column_name=key)
+                    insert_columns.append(key)
+                    insert_values.append(resolved_val)
                 else:
                     self.map[key] = Metadata(type_="UNK")
-                    self.map[key].resolveValue(value)
+                    resolved_val = self.map[key].resolveValue(value, queue=updateOrder, column_name=key)
+                    if updateOrder is not None:
+                        updateOrder.append({
+                            "type": "ALTER",
+                            "column_name": key,
+                            "old_type": None,
+                            "new_type": self.map[key].type if self.map[key].type != "list" else f"list<{self.map[key].subtype.type}>"
+                        })
+                    insert_columns.append(key)
+                    insert_values.append(resolved_val)
             elif key in self.map:
-                self.map[key].resolveValue(value)
+                resolved_val = self.map[key].resolveValue(value, queue=updateOrder, column_name=key)
+                insert_columns.append(key)
+                insert_values.append(resolved_val)
             else:
                 self.map[key] = Metadata(type_="UNK")
-                self.map[key].resolveValue(value)
+                resolved_val = self.map[key].resolveValue(value, queue=updateOrder, column_name=key)
+                if updateOrder is not None:
+                    updateOrder.append({
+                        "type": "ALTER",
+                        "column_name": key,
+                        "old_type": None,
+                        "new_type": self.map[key].type if self.map[key].type != "list" else f"list<{self.map[key].subtype.type}>"
+                    })
+                insert_columns.append(key)
+                insert_values.append(resolved_val)
+        
+        # Emit INSERT with all columns and values
+        if updateOrder is not None:
+            updateOrder.append({
+                "type": "INSERT",
+                "columns": insert_columns,
+                "values": insert_values
+            })
+        
+        return table_autogen_id
     
     def __repr__(self):
         # print("MapRegister __repr__ called; preparing tabulated output")
