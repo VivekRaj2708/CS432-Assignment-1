@@ -1,4 +1,4 @@
-# CS432-Assignment-1
+# CS432 Assignment 1
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](./tests/)
