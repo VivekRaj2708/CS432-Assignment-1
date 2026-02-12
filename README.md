@@ -24,7 +24,7 @@ A Python-based system for streaming Server-Sent Events (SSE), automatically infe
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 CS432-Assignment-1/
@@ -88,7 +88,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🎯 Usage
+## Usage
 
 ### Starting the Server
 
