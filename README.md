@@ -194,14 +194,6 @@ Logs are written to `logs.log` by default. Configure logging in `Utils/Log.py`.
 
 ---
 
-## Assignment Report
-
-For detailed analysis, implementation notes, and results, see:
-
-**[📄 Assignment Report](Assignment_Report.md)**
-
----
-
 ## Author
 
 1. **Vivek Raj** ([@VivekRaj2005](https://github.com/VivekRaj2005))
