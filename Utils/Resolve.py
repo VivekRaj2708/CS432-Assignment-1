@@ -87,21 +87,37 @@ class Metadata:
         value = self.normalize_list(value)
         return [self.convert_scalar(subtype, x) for x in value]
 
-    def try_allowed_transitions(self, value, allowed_targets):
+    def try_allowed_transitions(self, value, allowed_targets, queue=None, column_name=None):
         last_error = None
         for target in allowed_targets:
             try:
                 if target.startswith("list:"):
                     subtype = target.split(":", 1)[1]
                     converted = self.convert_list(subtype, value)
+                    old_type = self.type
                     self.type = "list"
                     self.subtype = Metadata(type_=subtype)
                     self.auto = False
+                    if queue is not None and column_name is not None:
+                        queue.append({
+                            "type": "ALTER",
+                            "column_name": column_name,
+                            "old_type": old_type,
+                            "new_type": f"list<{subtype}>"
+                        })
                     return converted
                 converted = self.convert_scalar(target, value)
+                old_type = self.type
                 self.type = target
                 self.subtype = None
                 self.auto = False
+                if queue is not None and column_name is not None:
+                    queue.append({
+                        "type": "ALTER",
+                        "column_name": column_name,
+                        "old_type": old_type,
+                        "new_type": target
+                    })
                 return converted
             except Exception as e:
                 last_error = e
@@ -120,7 +136,7 @@ class Metadata:
             return ["str"]
         return ["int", "float", "bool", "str"]
 
-    def resolveValue(self, value=None):
+    def resolveValue(self, value=None, queue=None, column_name=None):
         if self.auto:
             self.current_value += 1
             return self.current_value
@@ -204,7 +220,7 @@ class Metadata:
                     f"Type change detected: cannot convert {value} to int; trying allowed transitions"
                 )
                 return self.try_allowed_transitions(
-                    value, ["float", "list:int", "list:float", "str"]
+                    value, ["float", "list:int", "list:float", "str"], queue=queue, column_name=column_name
                 )
         
         elif self.type == "str":
@@ -214,7 +230,7 @@ class Metadata:
                 logger.warning(
                     f"Type change detected: cannot convert {value} to str; trying allowed transitions"
                 )
-                return self.try_allowed_transitions(value, ["list:str"])
+                return self.try_allowed_transitions(value, ["list:str"], queue=queue, column_name=column_name)
         
         elif self.type == "float":
             try:
@@ -223,7 +239,7 @@ class Metadata:
                 logger.warning(
                     f"Type change detected: cannot convert {value} to float; trying allowed transitions"
                 )
-                return self.try_allowed_transitions(value, ["list:float", "str"])
+                return self.try_allowed_transitions(value, ["list:float", "str"], queue=queue, column_name=column_name)
         
         elif self.type == "bool":
             try:
@@ -233,7 +249,7 @@ class Metadata:
                     f"Type change detected: cannot convert {value} to bool; trying allowed transitions"
                 )
                 return self.try_allowed_transitions(
-                    value, ["int", "float", "list:int", "list:float", "str"]
+                    value, ["int", "float", "list:int", "list:float", "str"], queue=queue, column_name=column_name
                 )
         
         elif self.type == "list":
@@ -260,7 +276,15 @@ class Metadata:
                     for subtype in self.get_allowed_list_subtypes():
                         try:
                             return_list_data = [self.convert_scalar(subtype, x) for x in value]
+                            old_subtype = self.subtype.type if self.subtype else "UNK"
                             self.subtype = Metadata(type_=subtype)
+                            if queue is not None and column_name is not None and old_subtype != subtype:
+                                queue.append({
+                                    "type": "ALTER",
+                                    "column_name": column_name,
+                                    "old_type": f"list<{old_subtype}>",
+                                    "new_type": f"list<{subtype}>"
+                                })
                             return return_list_data
                         except Exception:
                             continue

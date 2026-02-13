@@ -3,12 +3,14 @@ from Utils.Log import logger
 from Utils.Resolve import Metadata
 from tabulate import tabulate
 from pickle import dumps, loads
+from collections import deque
 
 
 class MapRegister:
-    def __init__(self):
-        self.map = {}
-    
+    def __init__(self, table_name="root"):
+        self.table_name = table_name
+        self.map = {"table_autogen_id": Metadata(type_="int", auto=True)}
+
     def __getitem__(self, key):
         return self.map[key]
     
@@ -18,22 +20,104 @@ class MapRegister:
     def __iter__(self):
         return iter(self.map)
 
-    def ResolveRequest(self, request):
+    def resolve_nested_list(self, key, items, updateOrder: deque=None):
+        for item in items:
+            if isinstance(item, dict):
+                if key not in self.map or not isinstance(self.map[key], MapRegister):
+                    child_table_name = f"{self.table_name}_{key}"
+                    self.map[key] = MapRegister(table_name=child_table_name)
+                    r = deque()
+                    self.map[key].ResolveRequest(item, r)
+                    updateOrder.append({
+                        "type": "CREATE",
+                        "table_name": child_table_name,
+                        "table_map": self.map[key]
+                    })
+                    while r:
+                        updateOrder.append(r.popleft())
+                    logger.info(f"Created new MapRegister for key: {key} with table name: {child_table_name}")
+                else:
+                    self.map[key].ResolveRequest(item, updateOrder=updateOrder)
+            elif isinstance(item, list):
+                self.resolve_nested_list(key, item, updateOrder=updateOrder)
+
+    def ResolveRequest(self, request, updateOrder=None):
+        table_autogen_id = self.map['table_autogen_id'].resolveValue(queue=updateOrder) # Increment the auto ID for each request
+        
+        # Collect resolved values for INSERT
+        insert_columns = []
+        insert_values = []
+        
         for key in request:
-            # print(f"Resolving key: {key} with value: {request[key]}")
-            if isinstance(request[key], dict):
-                # print(f"Key {key} is a nested dict; delegating to super MapRegister")
-                if key not in self.super:
-                    self.map[key] = MapRegister()
-                    logger.info(f"Created new MapRegister for key: {key}")
-                self.map[key].ResolveRequest(request[key])
-                # print(f"Finished resolving nested dict for key: {key}")
-                # print(f"Current state of super[{key}]: {self.map[key]}")
+            value = request[key]
+            if isinstance(value, dict):
+                if key not in self.map or not isinstance(self.map[key], MapRegister):
+                    child_table_name = f"{self.table_name}_{key}"
+                    self.map[key] = MapRegister(table_name=child_table_name)
+                    r = deque()
+                    child_id = self.map[key].ResolveRequest(value, r)
+                    updateOrder.append({
+                        "type": "CREATE",
+                        "table_name": child_table_name,
+                        "table_map": self.map[key]
+                    })
+                    while r:
+                        updateOrder.append(r.popleft())
+                    logger.info(f"Created new MapRegister for key: {key} with table name: {child_table_name}")
+                    insert_columns.append(key)
+                    insert_values.append(child_id)
+                else:
+                    child_id = self.map[key].ResolveRequest(value, updateOrder=updateOrder)
+                    insert_columns.append(key)
+                    insert_values.append(child_id)
+            elif isinstance(value, list):
+                if any(isinstance(item, (dict, list)) for item in value):
+                    self.resolve_nested_list(key, value, updateOrder=updateOrder)
+                elif key in self.map:
+                    resolved_val = self.map[key].resolveValue(value, queue=updateOrder, column_name=key)
+                    insert_columns.append(key)
+                    insert_values.append(resolved_val)
+                else:
+                    self.map[key] = Metadata(type_="UNK")
+                    resolved_val = self.map[key].resolveValue(value, queue=updateOrder, column_name=key)
+                    if updateOrder is not None:
+                        updateOrder.append({
+                            "type": "ALTER",
+                            "table_name": self.table_name,
+                            "column_name": key,
+                            "old_type": None,
+                            "new_type": self.map[key].type if self.map[key].type != "list" else f"list<{self.map[key].subtype.type}>"
+                        })
+                    insert_columns.append(key)
+                    insert_values.append(resolved_val)
             elif key in self.map:
-                self.map[key].resolveValue(request[key])
+                resolved_val = self.map[key].resolveValue(value, queue=updateOrder, column_name=key)
+                insert_columns.append(key)
+                insert_values.append(resolved_val)
             else:
                 self.map[key] = Metadata(type_="UNK")
-                self.map[key].resolveValue(request[key])
+                resolved_val = self.map[key].resolveValue(value, queue=updateOrder, column_name=key)
+                if updateOrder is not None:
+                    updateOrder.append({
+                        "type": "ALTER",
+                        "table_name": self.table_name,
+                        "column_name": key,
+                        "old_type": None,
+                        "new_type": self.map[key].type if self.map[key].type != "list" else f"list<{self.map[key].subtype.type}>"
+                    })
+                insert_columns.append(key)
+                insert_values.append(resolved_val)
+        
+        # Emit INSERT with all columns and values
+        if updateOrder is not None:
+            updateOrder.append({
+                "type": "INSERT",
+                "table_name": self.table_name,
+                "columns": insert_columns,
+                "values": insert_values
+            })
+        
+        return table_autogen_id
     
     def __repr__(self):
         # print("MapRegister __repr__ called; preparing tabulated output")
