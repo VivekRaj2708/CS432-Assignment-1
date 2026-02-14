@@ -12,7 +12,7 @@
 ## Project Overview:
 This project implements an autonomous data ingestion system that dynamically decides whether incoming JSON data is better suited for MySQL or MongoDB.
 
-We have implemented certain heuristics such as frequency, which will be discussed ahead and on basis of that will automaticaaly decide the data storage.
+Our code automatically decides where to store each record based on certain heuristics that we developed which we discuss below.
 
 ## Our Approach:
 JSON Stream (with logging) --> Cleaning of the data --> Mapping of Data --> Datatype handling --> Decision of Database based on heuristics --> Ingestion
