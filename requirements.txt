@@ -4,3 +4,9 @@ faker
 sse-starlette
 requests
 httpx
+tabulate
+pickle
+logging
+asyncio
+time
+json
