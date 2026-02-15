@@ -26,6 +26,10 @@ The module `MapRegister.py` implements a mapping engine that transforms nested J
 
 The module `Log.py` configures a centralized logging system for the pipeline. A root logger is initialized with an INFO severity level to write timestamped entries. The logging includes the log level, timestamp, and a descriptive message, helpful in closely monitoring the system and effective debugging if need be. 
 
+The module `sql_logger.py` translates the generated operation queue to executable SQL statements. It has functions to safely convert Python values to SQL literals, while ensuring proper handling of NULL values, booleans, numeric types, etc. It automatically generates **CREATE TABLE**, **ALTER TABLE**, and **INSERT** statements based on the recieved data. By keeping track in a log file, the system prevents duplicate schema operations. 
+
+The module `mongo_logger.py` generates MongoDB insert statements from the database opeartion queue, enabling documented oriented storage alongside relational persistence. Python values are convrted to MongoDB compatible JSON representations, ensuring correct handling of data. Since MongooDB is schema-less, it only needs insert statements, simplifying the generation statements compared to SQL. It also writes executable MongoDB commands to a log file, providing ready to run file for ingestion. 
+
 ### Heuristics we decided on:
 
 ### Workflow Diagram:
