@@ -16,19 +16,38 @@ async def Main(queue, stop_event):
 
     register.Load("final_map_register.pkl")
 
-    printed = 0
+    records_in_batch = 0
+    batch_number = 1
+    BATCH_SIZE = 1000
 
     task = asyncio.create_task(
         stream_sse_records(
-            count=10000,
             queue=queue,
             stop_event=stop_event,
-            max_queue_size=10
+            max_queue_size=10,
+            count=1000000
         )
     )
 
+    def flush_batch():
+        if not updates:
+            return
+
+        sql_file = f"sql_queries_batch_{batch_number}.log"
+        mongo_file = f"mongo_queries_batch_{batch_number}.log"
+        map_file = f"final_map_register_batch_{batch_number}.pkl"
+
+        sql_from_queue(updates, filename=sql_file, classifier=classifier)
+        mongo_from_queue(updates, filename=mongo_file, classifier=classifier)
+        register.Save(map_file)
+        classifier.save()
+
+        print(f"Batch {batch_number} processed and saved ({records_in_batch} records).")
+        
+        updates.clear()
+
     try:
-        while printed < 1000:
+        while True:
             if queue:
                 record = queue.popleft()
 
@@ -49,27 +68,32 @@ async def Main(queue, stop_event):
                         op["_original_record"] = record
 
                 updates.extend(record_updates)
-                printed += 1
+                records_in_batch += 1
+
+                if records_in_batch >= BATCH_SIZE:
+                    flush_batch()
+                    batch_number += 1
+                    records_in_batch = 0
 
             else:
                 await asyncio.sleep(0.1)
 
+    except asyncio.CancelledError:
+        pass
+
     finally:
         stop_event.set()
 
+        if records_in_batch > 0:
+            print(f"\nFlushing final incomplete batch {batch_number}...")
+            flush_batch()
+
         with open("Map.log", "w") as f:
             f.write(repr(register))
-
-        for update in updates:
-            print(update)
-
-        sql_from_queue(updates, filename="sql_queries.log", classifier=classifier)
-        mongo_from_queue(updates, filename="mongo_queries.log", classifier=classifier)
-
-        register.Save("final_map_register.pkl")
-        classifier.save()  
-
-        await task
+        try:
+            await asyncio.wait_for(task, timeout=2.0)
+        except (asyncio.TimeoutError, asyncio.CancelledError):
+            pass
 
 
 async def main():
@@ -81,5 +105,5 @@ async def main():
 if __name__ == "__main__":
     try:
         asyncio.run(main())
-    except Exception as e:
-        print(f"Error: {e}")
+    except KeyboardInterrupt:
+        print("\nProgram interrupted by user. Shutting down safely...")
