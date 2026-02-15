@@ -54,7 +54,8 @@ CS432-Assignment-1/
 │   ├── MapRegister.py  # Schema registry and SQL operation generation
 │   ├── SQL.py          # SQL query generation utilities
 │   ├── Log.py          # Logging configuration
-│   └── Algo.py         # Algorithm utilities
+│   ├── BiTemporal.py   # Timestamp record
+│   └── Classify.py     # Database classifier
 ├── tests/              # Test suite
 │   ├── test_network.py    # Network streaming tests
 │   └── test_resolve.py    # Type resolution tests
