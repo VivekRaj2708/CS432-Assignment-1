@@ -2,6 +2,9 @@
 
 # Task: Adaptive Ingestion & Hybrid Backend Placement
 
+## Github Repository Link
+[Link to Repository](https://github.com/VivekRaj2708/CS432-Assignment-1)
+
 ## Team Members: 
 - Harinarayan J (23110128) 
 - Nupoor Assudani (23110224)  
