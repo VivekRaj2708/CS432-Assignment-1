@@ -58,11 +58,12 @@ CS432-Assignment-1/
 │   └── Classify.py     # Database classifier
 ├── tests/              # Test suite
 │   ├── test_network.py    # Network streaming tests
+│   ├── test_join.py       # Join tests
 │   └── test_resolve.py    # Type resolution tests
 ├── Doc/                # Documentation
 │   ├── Network.md      # Network module documentation
-│   └── Resolver.md     # Resolve & MapRegister documentation
-│   └── placeholder.md     # SQL & MongoDB logger documentation
+│   ├── Resolver.md     # Resolve & MapRegister documentation
+│   └── Logger.md     # SQL & MongoDB logger documentation
 ├── T2/                 # Simulation module
 │   └── simulation.py  # Simulation utilities
 ├── Runner.py           # Main application entry point
