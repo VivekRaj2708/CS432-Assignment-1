@@ -10,3 +10,5 @@ logging
 asyncio
 time
 json
+pymongo
+mysql-connector-python
