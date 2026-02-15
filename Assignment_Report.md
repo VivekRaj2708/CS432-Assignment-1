@@ -38,7 +38,61 @@ The module `mongo_logger.py` generates MongoDB insert statements from the databa
 
 ### Individual Documentation:
 
+Comprehensive documentation is available in the `Doc/` directory:
+
+- **[Network Module](Doc/Network.md)** - SSE streaming, HTTP clients, queue management
+- **[Resolver Module](Doc/Resolver.md)** - Type resolution, schema inference, SQL operations
+- **[SQL and MongoDB Logger Module]()** - Queries detection from database queue, Query creation, Executable statements creation
+
 ## Project Structure:
+
+```
+CS432-Assignment-1/
+├── Utils/               # Core utility modules
+│   ├── Network.py      # SSE streaming and HTTP client
+│   ├── Resolve.py      # Type resolution and metadata management
+│   ├── MapRegister.py  # Schema registry and SQL operation generation
+│   ├── SQL.py          # SQL query generation utilities
+│   ├── Log.py          # Logging configuration
+│   └── Algo.py         # Algorithm utilities
+├── tests/              # Test suite
+│   ├── test_network.py    # Network streaming tests
+│   └── test_resolve.py    # Type resolution tests
+├── Doc/                # Documentation
+│   ├── Network.md      # Network module documentation
+│   └── Resolver.md     # Resolve & MapRegister documentation
+│   └── placeholder.md     # SQL & MongoDB logger documentation
+├── T2/                 # Simulation module
+│   └── simulation.py  # Simulation utilities
+├── Runner.py           # Main application entry point
+├── server.ps1/sh       # Development server scripts
+├── setup.ps1/sh        # Environment setup scripts
+├── requirements.txt    # Python dependencies
+├── mongo_logger.py     # MongoDB statement generation
+├── sql_logger.py       # SQL query generation
+├── logs.log            # Main logs file
+└── Assignment_Report.md # Detailed assignment report
+```
 
 ## Setup and Starting of system:
 
+### Starting the Server
+
+**Windows:**
+```powershell
+.\server.ps1
+```
+
+**Linux/macOS:**
+```bash
+chmod +x server.sh
+./server.sh
+```
+
+The server will start on `http://127.0.0.1:8000` by default.
+
+### Running the Main Application
+
+```bash
+python Runner.py
+```
