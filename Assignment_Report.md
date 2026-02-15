@@ -42,7 +42,7 @@ Comprehensive documentation is available in the `Doc/` directory:
 
 - **[Network Module](Doc/Network.md)** - SSE streaming, HTTP clients, queue management
 - **[Resolver Module](Doc/Resolver.md)** - Type resolution, schema inference, SQL operations
-- **[SQL and MongoDB Logger Module]()** - Queries detection from database queue, Query creation, Executable statements creation
+- **[SQL and MongoDB Logger Module](Doc/Logger.md)** - Queries detection from database queue, Query creation, Executable statements creation
 
 ## Project Structure:
 
