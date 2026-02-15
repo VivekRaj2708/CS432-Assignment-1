@@ -25,7 +25,6 @@ The module `Network.py` is an asynchronous GET wrapper that returns the parsed J
 
 The module `Resolve.py` implements a dynamic metadata and type-resolution system for ingestion. The **Metadata** class performs automatic type inference, and safe value conversions as new records are processed. Initially, an 'UNK' datatype is assigned and then it's updated to the appropriate data type using a proritized inference strategy. This system supports types like **int**,**float**,**bool**,**str**, as well as subtype tracking like **list<int>**. The module also supports auto-increment feature. This mainly handles the ingestion part for the SQL database.
 
-
 The module `BiTemporal.py` gives the system timestamps to create the bitemporal timestamps as required.
 
 The module `Classify.py` acts as an adaptive routing engine that categorizes incoming data fields for optimal storage in either a SQL or MongoDB. It continuously observes the data stream and determines the storage destination based on the heuristics specified. The module persists its learned state across sessions, allowing the pipeline to automatically adapt its schema routing and issue reclassification events as the shape and consistency of the data evolve.
@@ -62,8 +61,11 @@ Within the system, data uniqueness is determined by continuously tracking the ca
 
 ### Value Interpretation:
 
+We handled this using a pre-determined hierarchy for type inference. Each attribute is initially assigned the datatype UNK, and then evaluated sequentially through the following order: bool → int → float → list → string. The datatype that best matches the column’s values is ultimately selected. 
+
 ### Mixed Data Handling:
 
+We implemented a system that first attempts to match the incoming value with the previously stored datatype. If the conversion is successful, the value is stored in the same column. If the conversion fails, the system infers a new datatype and triggers an ALTER TABLE request to update the schema accordingly.
 
 ### Individual Documentation:
 
