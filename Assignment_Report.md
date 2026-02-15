@@ -25,6 +25,11 @@ The module `Network.py` is an asynchronous GET wrapper that returns the parsed J
 
 The module `Resolve.py` implements a dynamic metadata and type-resolution system for ingestion. The **Metadata** class performs automatic type inference, and safe value conversions as new records are processed. Initially, an 'UNK' datatype is assigned and then it's updated to the appropriate data type using a proritized inference strategy. This system supports types like **int**,**float**,**bool**,**str**, as well as subtype tracking like **list<int>**. The module also supports auto-increment feature. This mainly handles the ingestion part for the SQL database.
 
+
+The module `BiTemporal.py` gives the system timestamps to create the bitemporal timestamps as required.
+
+The module `Classify.py` acts as an adaptive routing engine that categorizes incoming data fields for optimal storage in either a SQL or MongoDB. It continuously observes the data stream and determines the storage destination based on the heuristics specified. The module persists its learned state across sessions, allowing the pipeline to automatically adapt its schema routing and issue reclassification events as the shape and consistency of the data evolve.
+
 The module `MapRegister.py` implements a mapping engine that transforms nested JSON records into normalized relational representation. It maintains a column metadata using the previously defined datatype inference system. For every record, the system recursively processes nested objects and lists, automatically creating tables and establishing keys and identifiers. It generates a queue of database operations like **CREATE**,**ALTER**,**INSERT**, etc. The schema state can be serialized and restored using pickle-based persistance allowing the pipeline to maintain continuity. 
 
 The module `Log.py` configures a centralized logging system for the pipeline. A root logger is initialized with an INFO severity level to write timestamped entries. The logging includes the log level, timestamp, and a descriptive message, helpful in closely monitoring the system and effective debugging if need be. 
@@ -33,11 +38,32 @@ The module `sql_logger.py` translates the generated operation queue to executabl
 
 The module `mongo_logger.py` generates MongoDB insert statements from the database opeartion queue, enabling documented oriented storage alongside relational persistence. Python values are convrted to MongoDB compatible JSON representations, ensuring correct handling of data. Since MongooDB is schema-less, it only needs insert statements, simplifying the generation statements compared to SQL. It also writes executable MongoDB commands to a log file, providing ready to run file for ingestion. 
 
-### Heuristics we decided on:
 
-### Workflow Diagram:
 
-### Conclusive Workflow:
+## Report Questions:
+
+### Normalization Strategy
+
+### Placement Heuristics:
+
+We have used the following four heuristics to classify the storage destination.
+
+1. Nesting:  SQL is designed for flat, two-dimensional data, and it will require complex operations such as creating child tables, etc. We have directly routed nested fields to MongoDB.
+
+2. Sparsity: The performance of SQL degrades with NULL heavy data as they use a B-Tree for indexing which gets polluted with NULLS in sparse data. Therefore, we set a threshold to route the data into either SQL or MongoDB based on the % of NULL values.
+
+3. Stability: The problem statement mentions type-drift happening occassionally. In an SQL table, Alter commands are highly expensive DDL commands. Therefore, we route fields which alter considerably to the MongoDB after counting the frequency of changes.
+
+4. Length Variance: SQL optimizes data storage and indexing based on fixed lengths of the data stored. A field with extreme variance in length forces the SQL engine to store using out-of-line storage which slows down the operations. Therefore, we calculate the variance for the streaming data using the Welford's Online Algorithm and route to MongoDB for significant variation.
+
+### Uniqueness:
+
+Within the system, data uniqueness is determined by continuously tracking the cardinality of incoming fields. As records are processed, the system maintains a running count of total observations for each field and simultaneously attempts to store the observed values in a specialized data structure that automatically filters out duplicates. To evaluate uniqueness, the system calculates a cardinality ratio by dividing the number of distinct values by the total number of observations. A field is strictly classified as unique only if this ratio is exactly 1.0, meaning every single recorded value for that field was completely distinct without any repetition.
+
+### Value Interpretation:
+
+### Mixed Data Handling:
+
 
 ### Individual Documentation:
 
