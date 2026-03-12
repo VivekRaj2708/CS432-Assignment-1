@@ -7,6 +7,27 @@ from Utils.BiTemporal import attach_bitemporal
 from Utils.Classify import FieldClassifier
 from sql_logger import sql_from_queue
 from mongo_logger import mongo_from_queue
+import glob
+import re
+
+def get_latest_register_path():
+    files = glob.glob("final_map_register_batch_*.pkl")
+    
+    if not files:
+        return None
+    
+    file_data = []
+    for f in files:
+        match = re.search(r"final_map_register_batch_(\d+)\.pkl", f)
+        if match:
+            # Store as (integer_value, filename)
+            file_data.append((int(match.group(1)), f))
+    
+    if not file_data:
+        return None
+        
+    file_data.sort()
+    return file_data[-1][1]
 
 
 async def Main(queue, stop_event):
@@ -14,7 +35,7 @@ async def Main(queue, stop_event):
     updates    = deque()
     classifier = FieldClassifier()
 
-    register.Load("final_map_register.pkl")
+    register.Load(get_latest_register_path())
 
     records_in_batch = 0
     batch_number = 1
@@ -24,7 +45,7 @@ async def Main(queue, stop_event):
         stream_sse_records(
             queue=queue,
             stop_event=stop_event,
-            max_queue_size=10,
+            max_queue_size=1000,
             count=1000000
         )
     )
