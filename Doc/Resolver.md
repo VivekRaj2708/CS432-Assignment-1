@@ -361,7 +361,7 @@ registry.ResolveRequest({
 
 ---
 
-### `resolve_nested_list(key, items, updateOrder=None)`
+<!-- ### `resolve_nested_list(key, items, updateOrder=None)` -->
 Recursively resolves lists containing dictionaries or nested lists.
 
 **Parameters:**
