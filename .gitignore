@@ -4,3 +4,4 @@
 *.log
 Power/*
 *.pkl
+**/.DS_Store

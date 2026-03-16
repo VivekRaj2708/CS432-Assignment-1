@@ -8,7 +8,7 @@ from Utils.Log import logger
 
 
 session = requests.Session()
-session.headers.update({
+session.headers.update({            #to always get the fresh data
     'Cache-Control': 'no-cache, no-store, must-revalidate',
     'Pragma': 'no-cache'
 })
@@ -22,13 +22,14 @@ def fetch_data():
         response.raise_for_status()
 
 
+# async: enables func to pause execution using await
 async def stream_sse_records(count: int, queue: deque, 
                             stop_event: asyncio.Event = None,
                             url=None, timeout=None, max_queue_size: int = None, 
                             reconnect_delay: float = 0.1):
     if url is None:
         bust = int(time.time()) # Unique number to prevent caching
-        url = f"http://127.0.0.1:8000/record/{count}?_={bust}"
+        url = f"http://127.0.0.1:8000/record/{count}?_={bust}" #record/{count} means server should stream count records
 
     headers = {
         'Accept': 'text/event-stream',
