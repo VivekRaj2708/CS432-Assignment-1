@@ -46,13 +46,15 @@ with open(schema_path) as f:
 app = FastAPI() # app
 faker = Faker() # faker generator
 
-DEPT_POOL = ["Arts", "Maths", "Physics", "Biology", "History", "Geography"] # varchar 20
+DEPT_POOL = []
 COURSE_POOL = []
 CLASSROOM_POOL = []
 TIMESLOT_POOL = []
 SECTION_POOL = []
 STUDENT_POOL = []
 INSTRUCTOR_POOL = []
+
+init_tables = False
 
 def trim_name(name, max_len=20):
     if len(name) <= max_len:
@@ -65,6 +67,7 @@ S_NAME_ID = {} # create ID if not yet else use the one prev created since ID won
 INSTRUCTOR_NAMES = names[1000:]
 I_NAME_ID = {}
 
+DEPT_NAMES = ["Arts", "Maths", "Physics", "Biology", "History", "Geography"] # varchar 20
 COURSE_TITLES = [faker.sentence(nb_words=3)[:50] for _ in range(100)]
 
 suffixes = ["Hall", "Building", "Center", "Complex", "Tower"]
@@ -98,19 +101,20 @@ def gen_classroom():
     CLASSROOM_POOL.append((building, room))
     return record
 
-def gen_dept():
-    if not CLASSROOM_POOL:
-        gen_classroom() # need there to be buildings before giving a dept a building
+def gen_dept(dept = None): # reqs CLASSROOM_POOL
+    if not dept:
+        dept = random.choice(DEPT_NAMES)
+    DEPT_POOL.append(dept)
     return {
         "table": "department",
-        "dept_name": random.choice(DEPT_POOL),
+        "dept_name": dept,
         "building": random.choice(BUILDINGS), # varchar 30
         "budget": round(random.uniform(500000, 5000000), 2) # max digs 12, max left to dec pt 2
     }
 
 def gen_student():
     name = random.choice(STUDENT_NAMES)
-    if name not in S_NAME_ID.keys():
+    if name not in S_NAME_ID:
         S_NAME_ID[name]=faker.bothify(text="S####")
     record = {
         "table": "student",
@@ -119,6 +123,7 @@ def gen_student():
         "dept_name": random.choice(DEPT_POOL), # varchar 20
         "tot_cred": random.randint(16, 32) # int
     }
+    STUDENT_POOL.append(S_NAME_ID[name])
     return record
 
 def gen_instructor():
@@ -132,6 +137,7 @@ def gen_instructor():
         "dept_name": random.choice(DEPT_POOL),
         "salary": round(random.uniform(100000, 1000000), 2) # max 10 digs total, max 2 after dec pt
     }
+    INSTRUCTOR_POOL.append(I_NAME_ID[name])
     return record
 
 def gen_course():
@@ -146,13 +152,7 @@ def gen_course():
     COURSE_POOL.append(course_id)
     return record
 
-def gen_section():
-    if not COURSE_POOL: # fix
-        gen_course()
-    if not CLASSROOM_POOL:
-        gen_classroom()
-    if not TIMESLOT_POOL:
-        gen_timeslot()
+def gen_section(): # reqs COURSE_POOL, CLASSROOM_POOL, TIMESLOT_POOL
     course = random.choice(COURSE_POOL) # fk
     building, room = random.choice(CLASSROOM_POOL) # fk
     ts_id, _, _ = random.choice(TIMESLOT_POOL) # fk
@@ -172,11 +172,19 @@ def gen_section():
     SECTION_POOL.append((course, sec_id, semester, year))
     return record
 
-def gen_takes():
-    if not STUDENT_POOL:
-        gen_student()
-    if not SECTION_POOL:
-        gen_section()
+def gen_teaches(): # reqs INSTRUCTOR_POOL, SECTION_POOL
+    instructor = random.choice(INSTRUCTOR_POOL)
+    course, sec, sem, year = random.choice(SECTION_POOL)
+    return {
+        "table": "teaches",
+        "ID": instructor,
+        "course_id": course,
+        "sec_id": sec,
+        "semester": sem,
+        "year": year
+    }
+
+def gen_takes(): # reqs STUDENT_POOL, SECTION_POOL
     student = random.choice(STUDENT_POOL)
     course, sec, sem, year = random.choice(SECTION_POOL)
     return {
@@ -189,19 +197,15 @@ def gen_takes():
         "grade": random.choice(["A","B","C","D","F","A-","B+"])
     }
 
-def gen_advisor():
-    if not STUDENT_POOL:
-        gen_student()
-    if not INSTRUCTOR_POOL:
-        gen_instructor()
+def gen_advisor(): # reqs STUDENT_POOL, INSTRUCTOR_POOL
     return {
         "table": "advisor",
         "s_id": random.choice(STUDENT_POOL),
         "i_id": random.choice(INSTRUCTOR_POOL)
     }
 
-def gen_prereq():
-    if len(COURSE_POOL) < 20: 
+def gen_prereq(): # reqs COURSE_POOL
+    if len(COURSE_POOL) < 2: # if less than 2 courses, can't have prereqs
         gen_course()
         gen_course()
     course = random.choice(COURSE_POOL)
@@ -223,36 +227,63 @@ TABLE_GENERATORS = {
     "classroom": gen_classroom,
     "time_slot": gen_timeslot,
     "takes": gen_takes,
-    "teaches": gen_advisor,
+    "teaches": gen_teaches,
     "advisor": gen_advisor,
     "prereq": gen_prereq
 }
 
 """
 need to add some bias and randomness to mimic real user input
+added randomisation of which table the generated record is of
+for sparseness, could randomly make some fields null after creation of record
+for metadata, could add details of client like they did
 for valid input, first need to add some initial records to ensure foreign key matches
 """
 
-def init_tables():
+def init_tables(): # for valid input, need to add some initial records to ensure foreign key matches
     global initiated_tabs
     if initiated_tabs:
         return
     for _ in range(10):
         gen_timeslot()
-    
-    for _ in range(6):
-        gen_dept()
+    for _ in range(10):
+        gen_classroom()
+    for dept in DEPT_NAMES: # generating depts, that's sensible
+        gen_dept(dept)
     for _ in range(10):
         gen_student()
         gen_instructor()
     for _ in range(10):
         gen_course()
     for _ in range(10):
-        gen_classroom()
-    
-    for _ in range(10):
         gen_section()
     initiated_tabs = True
+
+TABLE_WEIGHTS = {
+    "department": 0.2,
+    "student": 0.8,
+    "instructor": 0.7,
+    "course": 0.6,
+    "classroom": 0.3,
+    "time_slot": 0.3,
+    "section": 0.2,
+    "takes": 0.4,
+    "advisor": 0.2,
+    "prereq": 0.2,
+    "teaches": 0.4
+}
+
+def choose_table():
+    tables = list(TABLE_WEIGHTS.keys())
+    weights = list(TABLE_WEIGHTS.values())
+    return random.choices(tables, weights=weights, k=1)[0]
+
+def generate_record():
+    init_tables()
+    table = choose_table()
+    generator = TABLE_GENERATORS[table]
+    record = generator()
+    return record
 
 @app.get("/") # HTTP endpoint method GET, URL /
 async def single_record():
