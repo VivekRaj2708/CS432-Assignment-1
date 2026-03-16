@@ -1,0 +1,120 @@
+{
+  "student": {
+    "ID": ["VARCHAR(5)", "PRIMARY KEY"],
+    "name": ["VARCHAR(20)", "NOT NULL"],
+    "dept_name": ["VARCHAR(20)", "FK -> department(dept_name)"],
+    "tot_cred": ["INT", "DEFAULT 0"],
+    "table@constraints": [
+      "FOREIGN KEY (dept_name) REFERENCES department(dept_name)"
+    ]
+  },
+
+  "instructor": {
+    "ID": ["VARCHAR(5)", "PRIMARY KEY"],
+    "name": ["VARCHAR(20)", "NOT NULL"],
+    "dept_name": ["VARCHAR(20)", "FK -> department(dept_name)"],
+    "salary": ["DECIMAL(10,2)", "CHECK (salary > 0)"],
+    "table@constraints": [
+      "FOREIGN KEY (dept_name) REFERENCES department(dept_name)"
+    ]
+  },
+
+  "department": {
+    "dept_name": ["VARCHAR(20)", "PRIMARY KEY"],
+    "building": ["VARCHAR(30)", "NOT NULL"],
+    "budget": ["DECIMAL(12,2)", "CHECK (budget > 0)"],
+    "table@constraints": []
+  },
+
+  "course": {
+    "course_id": ["VARCHAR(8)", "PRIMARY KEY"],
+    "title": ["VARCHAR(50)", "NOT NULL"],
+    "dept_name": ["VARCHAR(20)", "FK -> department(dept_name)"],
+    "credits": ["INT", "CHECK (credits > 0)"],
+    "table@constraints": [
+      "FOREIGN KEY (dept_name) REFERENCES department(dept_name)"
+    ]
+  },
+
+  "section": {
+    "course_id": ["VARCHAR(8)", "FK -> course(course_id)"],
+    "sec_id": ["VARCHAR(8)", "NOT NULL"],
+    "semester": ["VARCHAR(6)", "CHECK (semester IN ('Fall','Spring','Summer','Winter'))"],
+    "year": ["INT", "CHECK (year > 2000)"],
+    "building": ["VARCHAR(30)", "FK -> classroom(building)"],
+    "room_no": ["VARCHAR(7)", "FK -> classroom(room_no)"],
+    "time_slot_id": ["VARCHAR(4)", "FK -> time_slot(time_slot_id)"],
+    "table@constraints": [
+      "PRIMARY KEY (course_id, sec_id, semester, year)",
+      "FOREIGN KEY (course_id) REFERENCES course(course_id)",
+      "FOREIGN KEY (building, room_no) REFERENCES classroom(building, room_no)",
+      "FOREIGN KEY (time_slot_id) REFERENCES time_slot(time_slot_id)"
+    ]
+  },
+
+  "classroom": {
+    "building": ["VARCHAR(30)"],
+    "room_no": ["VARCHAR(7)"],
+    "capacity": ["INT", "CHECK (capacity > 0)"],
+    "table@constraints": [
+      "PRIMARY KEY (building, room_no)"
+    ]
+  },
+
+  "time_slot": {
+    "time_slot_id": ["VARCHAR(4)"],
+    "day": ["VARCHAR(10)"],
+    "start_time": ["TIME"],
+    "end_time": ["TIME"],
+    "table@constraints": [
+      "PRIMARY KEY (time_slot_id, day, start_time)"
+    ]
+  },
+
+  "takes": {
+    "ID": ["VARCHAR(5)", "FK -> student(ID)"],
+    "course_id": ["VARCHAR(8)", "FK -> section(course_id)"],
+    "sec_id": ["VARCHAR(8)"],
+    "semester": ["VARCHAR(6)"],
+    "year": ["INT"],
+    "grade": ["VARCHAR(2)"],
+    "table@constraints": [
+      "PRIMARY KEY (ID, course_id, sec_id, semester, year)",
+      "FOREIGN KEY (ID) REFERENCES student(ID)",
+      "FOREIGN KEY (course_id, sec_id, semester, year) REFERENCES section(course_id, sec_id, semester, year)"
+    ]
+  },
+
+  "teaches": {
+    "ID": ["VARCHAR(5)", "FK -> instructor(ID)"],
+    "course_id": ["VARCHAR(8)", "FK -> section(course_id)"],
+    "sec_id": ["VARCHAR(8)"],
+    "semester": ["VARCHAR(6)"],
+    "year": ["INT"],
+    "table@constraints": [
+      "PRIMARY KEY (ID, course_id, sec_id, semester, year)",
+      "FOREIGN KEY (ID) REFERENCES instructor(ID)",
+      "FOREIGN KEY (course_id, sec_id, semester, year) REFERENCES section(course_id, sec_id, semester, year)"
+    ]
+  },
+
+  "advisor": {
+    "s_id": ["VARCHAR(5)", "FK -> student(ID)"],
+    "i_id": ["VARCHAR(5)", "FK -> instructor(ID)"],
+    "table@constraints": [
+      "PRIMARY KEY (s_id)",
+      "FOREIGN KEY (s_id) REFERENCES student(ID)",
+      "FOREIGN KEY (i_id) REFERENCES instructor(ID)"
+    ]
+  },
+
+  "prereq": {
+    "course_id": ["VARCHAR(8)", "FK -> course(course_id)"],
+    "prereq_id": ["VARCHAR(8)", "FK -> course(course_id)"],
+    "table@constraints": [
+      "PRIMARY KEY (course_id, prereq_id)",
+      "FOREIGN KEY (course_id) REFERENCES course(course_id)",
+      "FOREIGN KEY (prereq_id) REFERENCES course(course_id)"
+    ]
+  }
+}

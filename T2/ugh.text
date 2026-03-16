@@ -1,0 +1,150 @@
+student ID
+instructor ID
+instructor_name
+dept_name
+student_name
+tot_credit
+salary
+
+FIELD_POOL = {
+    "student_id":lambda: faker.bothify(text="S####"),
+    "student_name":,
+    "dept_name":lambda: random.choice(["Arts", "Maths", "Physics", "Biology", "History"]),
+    "tot_credit": lambda: random.randint(16, 32),
+    "inst_id":lambda: faker.bothify(text="S####"),
+    "inst_name":,
+    "salary":lambda: round(random.uniform(50000,150000),2),
+    "building":,
+    "budget:lambda:round(random.uniform(100000,2000000),2),
+    "course_id":,
+    "title":,
+    "credits":lambda: random.choice([1,2,3,4,5]),
+    "sec_id":,
+    "semester":lambda: random.choice([1,2,3,4,5,6,7,8]),
+    "year": lambda: random.randint(2016, 2026),
+    "room_no":lambda: random.randint(90, 100),
+    "time_slot_id":,
+    "capacity":,
+    "grade":lambda: random.choice(["A", "B", "C", "D", "E", "F"])
+}
+
+uni_schema = {
+  "student": {
+    "ID": ["VARCHAR(5)", "PRIMARY KEY"],
+    "name": ["VARCHAR(20)", "NOT NULL"],
+    "dept_name": ["VARCHAR(20)", "FK -> department(dept_name)"],
+    "tot_cred": ["INT", "DEFAULT 0"],
+    "table@constraints": [
+      "FOREIGN KEY (dept_name) REFERENCES department(dept_name)"
+    ]
+  },
+
+  "instructor": {
+    "ID": ["VARCHAR(5)", "PRIMARY KEY"],
+    "name": ["VARCHAR(20)", "NOT NULL"],
+    "dept_name": ["VARCHAR(20)", "FK -> department(dept_name)"],
+    "salary": ["DECIMAL(10,2)", "CHECK (salary > 0)"],
+    "table@constraints": [
+      "FOREIGN KEY (dept_name) REFERENCES department(dept_name)"
+    ]
+  },
+
+  "department": {
+    "dept_name": ["VARCHAR(20)", "PRIMARY KEY"],
+    "building": ["VARCHAR(15)", "NOT NULL"],
+    "budget": ["DECIMAL(12,2)", "CHECK (budget > 0)"],
+    "table@constraints": []
+  },
+
+  "course": {
+    "course_id": ["VARCHAR(8)", "PRIMARY KEY"],
+    "title": ["VARCHAR(50)", "NOT NULL"],
+    "dept_name": ["VARCHAR(20)", "FK -> department(dept_name)"],
+    "credits": ["INT", "CHECK (credits > 0)"],
+    "table@constraints": [
+      "FOREIGN KEY (dept_name) REFERENCES department(dept_name)"
+    ]
+  },
+
+  "section": {
+    "course_id": ["VARCHAR(8)", "FK -> course(course_id)"],
+    "sec_id": ["VARCHAR(8)", "NOT NULL"],
+    "semester": ["VARCHAR(6)", "CHECK (semester IN ('Fall','Spring','Summer','Winter'))"],
+    "year": ["INT", "CHECK (year > 2000)"],
+    "building": ["VARCHAR(15)", "FK -> classroom(building)"],
+    "room_no": ["VARCHAR(7)", "FK -> classroom(room_no)"],
+    "time_slot_id": ["VARCHAR(4)", "FK -> time_slot(time_slot_id)"],
+    "table@constraints": [
+      "PRIMARY KEY (course_id, sec_id, semester, year)",
+      "FOREIGN KEY (course_id) REFERENCES course(course_id)",
+      "FOREIGN KEY (building, room_no) REFERENCES classroom(building, room_no)",
+      "FOREIGN KEY (time_slot_id) REFERENCES time_slot(time_slot_id)"
+    ]
+  },
+
+  "classroom": {
+    "building": ["VARCHAR(15)"],
+    "room_no": ["VARCHAR(7)"],
+    "capacity": ["INT", "CHECK (capacity > 0)"],
+    "table@constraints": [
+      "PRIMARY KEY (building, room_no)"
+    ]
+  },
+
+  "time_slot": {
+    "time_slot_id": ["VARCHAR(4)"],
+    "day": ["VARCHAR(10)"],
+    "start_time": ["TIME"],
+    "end_time": ["TIME"],
+    "table@constraints": [
+      "PRIMARY KEY (time_slot_id, day, start_time)"
+    ]
+  },
+
+  "takes": {
+    "ID": ["VARCHAR(5)", "FK -> student(ID)"],
+    "course_id": ["VARCHAR(8)", "FK -> section(course_id)"],
+    "sec_id": ["VARCHAR(8)"],
+    "semester": ["VARCHAR(6)"],
+    "year": ["INT"],
+    "grade": ["VARCHAR(2)"],
+    "table@constraints": [
+      "PRIMARY KEY (ID, course_id, sec_id, semester, year)",
+      "FOREIGN KEY (ID) REFERENCES student(ID)",
+      "FOREIGN KEY (course_id, sec_id, semester, year) REFERENCES section(course_id, sec_id, semester, year)"
+    ]
+  },
+
+  "teaches": {
+    "ID": ["VARCHAR(5)", "FK -> instructor(ID)"],
+    "course_id": ["VARCHAR(8)", "FK -> section(course_id)"],
+    "sec_id": ["VARCHAR(8)"],
+    "semester": ["VARCHAR(6)"],
+    "year": ["INT"],
+    "table@constraints": [
+      "PRIMARY KEY (ID, course_id, sec_id, semester, year)",
+      "FOREIGN KEY (ID) REFERENCES instructor(ID)",
+      "FOREIGN KEY (course_id, sec_id, semester, year) REFERENCES section(course_id, sec_id, semester, year)"
+    ]
+  },
+
+  "advisor": {
+    "s_id": ["VARCHAR(5)", "FK -> student(ID)"],
+    "i_id": ["VARCHAR(5)", "FK -> instructor(ID)"],
+    "table@constraints": [
+      "PRIMARY KEY (s_id)",
+      "FOREIGN KEY (s_id) REFERENCES student(ID)",
+      "FOREIGN KEY (i_id) REFERENCES instructor(ID)"
+    ]
+  },
+
+  "prereq": {
+    "course_id": ["VARCHAR(8)", "FK -> course(course_id)"],
+    "prereq_id": ["VARCHAR(8)", "FK -> course(course_id)"],
+    "table@constraints": [
+      "PRIMARY KEY (course_id, prereq_id)",
+      "FOREIGN KEY (course_id) REFERENCES course(course_id)",
+      "FOREIGN KEY (prereq_id) REFERENCES course(course_id)"
+    ]
+  }
+}
