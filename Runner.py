@@ -5,10 +5,12 @@ from Utils.Network import stream_sse_records
 from Utils.MapRegister import MapRegister
 from Utils.BiTemporal import attach_bitemporal
 from Utils.Classify import FieldClassifier
-from sql_logger import sql_from_queue
-from mongo_logger import mongo_from_queue
+from sql_logger import sql_schema_maker,sql_from_queue
+from mongo_logger import mongo_schema_maker,mongo_from_queue
 import glob
 import re
+
+#schema=
 
 def get_latest_register_path():
     files = glob.glob("final_map_register_batch_*.pkl")
@@ -120,6 +122,10 @@ async def Main(queue, stop_event):
 async def main():
     queue      = deque()
     stop_event = asyncio.Event()
+    #making schema 1st and storing in log file
+    sql_schema_maker(schema, filename="sql_schema.log")
+    mongo_schema_maker(schema, filename="mongo_schema.log")
+
     await Main(queue, stop_event)
 
 
