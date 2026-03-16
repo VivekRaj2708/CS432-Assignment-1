@@ -10,8 +10,6 @@ from mongo_logger import mongo_schema_maker,mongo_from_queue
 import glob
 import re
 
-#schema=
-
 def get_latest_register_path():
     files = glob.glob("final_map_register_batch_*.pkl")
     
@@ -43,7 +41,7 @@ async def Main(queue, stop_event):
     batch_number = 1
     BATCH_SIZE = 1000
 
-    task = asyncio.create_task(
+    task = asyncio.create_task( # pushes incoming events to queue
         stream_sse_records(
             queue=queue,
             stop_event=stop_event,
@@ -70,10 +68,22 @@ async def Main(queue, stop_event):
         updates.clear()
 
     try:
-        while True:
+        while True: # now reading queue and processing
             if queue:
-                record = queue.popleft()
+                # record = queue.popleft() editing this, event can be record or schema, previously was just record
+                ##########
+                event = queue.popleft()
+                etype = event["event"]
+                data  = event["data"]
 
+                if etype=="schema":
+                    schema = data
+                    sql_schema_maker(schema, filename="sql_schema.log")
+                    mongo_schema_maker(schema, filename="mongo_schema.log")
+                    continue
+                if etype == "record":
+                    record = data
+                ##########
                 attach_bitemporal(record)
                 sys_ingested_at = record["sys_ingested_at"]
                 t_stamp         = record["t_stamp"]
@@ -122,9 +132,6 @@ async def Main(queue, stop_event):
 async def main():
     queue      = deque()
     stop_event = asyncio.Event()
-    #making schema 1st and storing in log file
-    sql_schema_maker(schema, filename="sql_schema.log")
-    mongo_schema_maker(schema, filename="mongo_schema.log")
 
     await Main(queue, stop_event)
 

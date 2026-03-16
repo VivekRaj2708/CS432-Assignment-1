@@ -273,6 +273,20 @@ TABLE_WEIGHTS = {
     "teaches": 0.4
 }
 
+CAN_BE_NULL = {
+    "department": [],
+    "student": ["tot_cred"],
+    "instructor": ["salary"],
+    "course": [],
+    "classroom": [],
+    "time_slot": [],
+    "section": [],
+    "takes": [],
+    "advisor": [],
+    "prereq": [],
+    "teaches": []
+}
+
 def choose_table():
     tables = list(TABLE_WEIGHTS.keys())
     weights = list(TABLE_WEIGHTS.values())

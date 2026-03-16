@@ -53,7 +53,8 @@ async def stream_sse_records(count: int, queue: deque,
             async with httpx.AsyncClient(timeout=timeout) as client:
                 async with client.stream('GET', url, headers=headers) as resp:
                     resp.raise_for_status()
-                    async for raw_line in resp.aiter_lines():
+                    curr_event = None ###### could be record or schema
+                    async for raw_line in resp.aiter_lines(): # streams records line by line
                         # termination check
                         if stop_event is not None and stop_event.is_set():
                             logger.info('Stop event set, ending SSE stream')
@@ -69,16 +70,34 @@ async def stream_sse_records(count: int, queue: deque,
                         if raw_line is None:
                             continue
                         line = raw_line.strip()
-
-                        if line.startswith('data:'):
+                        #########
+                        ## prev code assumes everything is a record
+                        # if line.startswith('data:'):
+                        #     data_str = line[len('data: '):].strip()
+                        #     try:
+                        #         record = json.loads(data_str)
+                        #         if 't_stamp' not in record or record['t_stamp'] is None:
+                        #             record['t_stamp'] = time.time()
+                        #         queue.append(record)
+                        #     except json.JSONDecodeError as exc:
+                        #         logger.warning('Failed to parse JSON from SSE data: %s', exc)
+                        # new code, need to distinguish between schema and record
+                        # in the future, will also need to differentiate between types of operations
+                        if line.startswith('event:'):
+                            curr_event = line[len("event:"):].strip()
+                        elif line.startswith('data:'):
                             data_str = line[len('data: '):].strip()
                             try:
-                                record = json.loads(data_str)
-                                if 't_stamp' not in record or record['t_stamp'] is None:
-                                    record['t_stamp'] = time.time()
-                                queue.append(record)
-                            except json.JSONDecodeError as exc:
+                                payload = json.loads(data_str)
+                                if curr_event=='record' and ('t_stamp' not in payload or payload['t_stamp'] is None):
+                                        payload['t_stamp'] = time.time()
+                                queue.append({
+                                    "event": curr_event,
+                                    "data": payload 
+                                })
+                            except:
                                 logger.warning('Failed to parse JSON from SSE data: %s', exc)
+                        #########
         except Exception as exc:
             logger.exception('SSE stream error, will reconnect after delay: %s', exc)
 
