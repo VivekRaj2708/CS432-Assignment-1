@@ -54,7 +54,7 @@ SECTION_POOL = []
 STUDENT_POOL = []
 INSTRUCTOR_POOL = []
 
-init_tables = False
+initiated_tabs = False
 
 def trim_name(name, max_len=20):
     if len(name) <= max_len:
@@ -240,24 +240,36 @@ for metadata, could add details of client like they did
 for valid input, first need to add some initial records to ensure foreign key matches
 """
 
+def rec_to_update_format(rec):
+    new_rec = {"table_name":rec["table"], "columns":[], "values":[]}
+    for field in rec:
+        if field=="table_name":
+            continue
+        new_rec["columns"].append(field)
+        new_rec["values"].append(rec[field])
+    return new_rec
+
+
 def init_tables(): # for valid input, need to add some initial records to ensure foreign key matches
     global initiated_tabs
+    init_records = []
     if initiated_tabs:
         return
     for _ in range(10):
-        gen_timeslot()
+        init_records.append(gen_timeslot())
     for _ in range(10):
-        gen_classroom()
+        init_records.append(gen_classroom())
     for dept in DEPT_NAMES: # generating depts, that's sensible
-        gen_dept(dept)
+        init_records.append(gen_dept(dept))
     for _ in range(10):
-        gen_student()
-        gen_instructor()
+        init_records.append(gen_student())
+        init_records.append(gen_instructor())
     for _ in range(10):
-        gen_course()
+        init_records.append(gen_course())
     for _ in range(10):
-        gen_section()
+        init_records.append(gen_section())
     initiated_tabs = True
+    return init_records
 
 TABLE_WEIGHTS = {
     "department": 0.2,
@@ -293,7 +305,6 @@ def choose_table():
     return random.choices(tables, weights=weights, k=1)[0]
 
 def generate_record():
-    init_tables()
     table = choose_table()
     generator = TABLE_GENERATORS[table]
     record = generator()
@@ -310,8 +321,16 @@ async def stream_records(count: int):
             "event": "schema",
             "data": json.dumps(uni_schema)
         }
-        await asyncio.sleep(0.1)
+        if not initiated_tabs: # some initial records to prevent reference errors
+            init_records = init_tables()
+            await asyncio.sleep(0.1)
+            for rec in init_records:
+                await asyncio.sleep(0.01)
+                # nrec = rec_to_update_format(rec)
+                yield{"event":"record", "data":rec}
         for _ in range(count): # then records
             await asyncio.sleep(0.01)
-            yield {"event": "record", "data": json.dumps(generate_record())}
+            # rec = rec_to_update_format(generate_record())
+            rec = generate_record()
+            yield {"event": "record", "data": json.dumps(rec)}
     return EventSourceResponse(event_generator())

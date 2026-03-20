@@ -46,7 +46,7 @@ async def Main(queue, stop_event):
             queue=queue,
             stop_event=stop_event,
             max_queue_size=1000,
-            count=1000000
+            count=200 ###########1000000
         )
     )
 
@@ -59,6 +59,9 @@ async def Main(queue, stop_event):
         map_file = f"final_map_register_batch_{batch_number}.pkl"
 
         sql_from_queue(updates, filename=sql_file, classifier=classifier)
+        ######
+        print(updates[5])
+        ######
         mongo_from_queue(updates, filename=mongo_file, classifier=classifier)
         register.Save(map_file)
         classifier.save()
