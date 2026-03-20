@@ -59,9 +59,6 @@ async def Main(queue, stop_event):
         map_file = f"final_map_register_batch_{batch_number}.pkl"
 
         sql_from_queue(updates, filename=sql_file, classifier=classifier)
-        ######
-        print(updates[5])
-        ######
         mongo_from_queue(updates, filename=mongo_file, classifier=classifier)
         register.Save(map_file)
         classifier.save()
