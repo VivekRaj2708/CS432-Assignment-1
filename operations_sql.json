@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-03-22T17:31:24.299424",
+    "generated_at": "2026-03-22T17:55:25.193472",
     "total_queries": 198,
     "valid_queries": 198,
     "generated_sql_statements": 198,
@@ -19,23 +19,23 @@
   "generated_queries": [
     {
       "type": "create",
-      "entity": "time_slot",
-      "sql": "CREATE TABLE IF NOT EXISTS time_slot (\n  course_id VARCHAR(255),\n  day VARCHAR(255),\n  end_time VARCHAR(255),\n  start_time VARCHAR(255),\n  time_slot_id VARCHAR(255) PRIMARY KEY\n);",
-      "description": "Create on time_slot",
+      "entity": "instructor",
+      "sql": "CREATE TABLE IF NOT EXISTS instructor (\n  instructor_id VARCHAR(255) PRIMARY KEY,\n  student_id VARCHAR(255)\n);",
+      "description": "Create on instructor",
       "query_index": 1
     },
     {
       "type": "create",
-      "entity": "dept_name",
-      "sql": "CREATE TABLE IF NOT EXISTS dept_name (\n  dept_name VARCHAR(255) PRIMARY KEY\n);",
-      "description": "Create on dept_name",
+      "entity": "course",
+      "sql": "CREATE TABLE IF NOT EXISTS course (\n  budget VARCHAR(255),\n  building VARCHAR(255),\n  course_id VARCHAR(255) PRIMARY KEY,\n  credits VARCHAR(255),\n  instructor_name VARCHAR(255),\n  room_no VARCHAR(255),\n  salary VARCHAR(255),\n  sec_id VARCHAR(255),\n  semester VARCHAR(255),\n  time_slot_id VARCHAR(255),\n  title VARCHAR(255),\n  year VARCHAR(255)\n);",
+      "description": "Create on course",
       "query_index": 2
     },
     {
       "type": "create",
-      "entity": "instructor",
-      "sql": "CREATE TABLE IF NOT EXISTS instructor (\n  instructor_id VARCHAR(255) PRIMARY KEY,\n  student_id VARCHAR(255)\n);",
-      "description": "Create on instructor",
+      "entity": "time_slot",
+      "sql": "CREATE TABLE IF NOT EXISTS time_slot (\n  course_id VARCHAR(255),\n  day VARCHAR(255),\n  end_time VARCHAR(255),\n  start_time VARCHAR(255),\n  time_slot_id VARCHAR(255) PRIMARY KEY\n);",
+      "description": "Create on time_slot",
       "query_index": 3
     },
     {
@@ -47,9 +47,9 @@
     },
     {
       "type": "create",
-      "entity": "course",
-      "sql": "CREATE TABLE IF NOT EXISTS course (\n  budget VARCHAR(255),\n  building VARCHAR(255),\n  course_id VARCHAR(255) PRIMARY KEY,\n  credits VARCHAR(255),\n  instructor_name VARCHAR(255),\n  room_no VARCHAR(255),\n  salary VARCHAR(255),\n  sec_id VARCHAR(255),\n  semester VARCHAR(255),\n  time_slot_id VARCHAR(255),\n  title VARCHAR(255),\n  year VARCHAR(255)\n);",
-      "description": "Create on course",
+      "entity": "dept_name",
+      "sql": "CREATE TABLE IF NOT EXISTS dept_name (\n  dept_name VARCHAR(255) PRIMARY KEY\n);",
+      "description": "Create on dept_name",
       "query_index": 5
     },
     {
@@ -61,51 +61,43 @@
       "username": "loretta65"
     },
     {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS1029', 5, 'Low.');",
+      "description": "Insert on course",
       "query_index": 7,
       "username": "katherine37"
     },
     {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS1029', 'Low.', 5);",
-      "description": "Insert on course",
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 8,
       "username": "katherine37"
     },
     {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS6074', 2, 'Dinner glass.');",
+      "description": "Insert on course",
       "query_index": 9,
       "username": "loretta65"
     },
     {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS6074', 'Dinner glass.', 2);",
-      "description": "Insert on course",
-      "query_index": 10,
-      "username": "loretta65"
-    },
-    {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 11,
+      "query_index": 10,
       "username": "loretta65"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S9915', 'Brandi Cannon', 23, 'Geography');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S9915', 23, 'Brandi Cannon', 'Geography');",
       "description": "Insert on student",
-      "query_index": 12,
+      "query_index": 11,
       "username": "loretta65"
     },
     {
@@ -113,39 +105,39 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 13,
-      "username": "wyang"
+      "query_index": 12,
+      "username": "loretta65"
     },
     {
       "type": "insert",
       "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS1773', 'Likely fill poor.', 4);",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS1773', 4, 'Likely fill poor.');",
       "description": "Insert on course",
+      "query_index": 13,
+      "username": "wyang"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 14,
       "username": "wyang"
     },
     {
       "type": "insert",
       "entity": "time_slot",
-      "sql": "INSERT INTO time_slot (time_slot_id, day, start_time, end_time) VALUES ('T737', 'Monday', '12:00', '12:50');",
+      "sql": "INSERT INTO time_slot (time_slot_id, start_time, end_time, day) VALUES ('T737', '12:00', '12:50', 'Monday');",
       "description": "Insert on time_slot",
       "query_index": 15,
       "username": "vlong"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
-      "query_index": 16,
-      "username": "jodischneider"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I7306');",
       "description": "Insert on instructor",
-      "query_index": 17,
+      "query_index": 16,
       "username": "jodischneider"
     },
     {
@@ -153,15 +145,15 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 18,
-      "username": "williamskaren"
+      "query_index": 17,
+      "username": "jodischneider"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I2417');",
       "description": "Insert on instructor",
-      "query_index": 19,
+      "query_index": 18,
       "username": "williamskaren"
     },
     {
@@ -169,14 +161,22 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 20,
-      "username": "sarah08"
+      "query_index": 19,
+      "username": "williamskaren"
     },
     {
       "type": "insert",
       "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS0349', 'Same true.', 1);",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS0349', 1, 'Same true.');",
       "description": "Insert on course",
+      "query_index": 20,
+      "username": "sarah08"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 21,
       "username": "sarah08"
     },
@@ -190,34 +190,26 @@
     },
     {
       "type": "insert",
-      "entity": "dept_name",
-      "sql": "INSERT INTO dept_name (dept_name) VALUES ('Biology');",
-      "description": "Insert on dept_name",
+      "entity": "instructor",
+      "sql": "INSERT INTO instructor (instructor_id) VALUES ('I6737');",
+      "description": "Insert on instructor",
       "query_index": 23,
       "username": "wyang"
     },
     {
       "type": "insert",
-      "entity": "instructor",
-      "sql": "INSERT INTO instructor (instructor_id) VALUES ('I6737');",
-      "description": "Insert on instructor",
+      "entity": "dept_name",
+      "sql": "INSERT INTO dept_name (dept_name) VALUES ('Biology');",
+      "description": "Insert on dept_name",
       "query_index": 24,
       "username": "wyang"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
-      "query_index": 25,
-      "username": "jodischneider"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I0793');",
       "description": "Insert on instructor",
-      "query_index": 26,
+      "query_index": 25,
       "username": "jodischneider"
     },
     {
@@ -225,71 +217,71 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
+      "query_index": 26,
+      "username": "jodischneider"
+    },
+    {
+      "type": "insert",
+      "entity": "student",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S7581', 22, 'Drew Johnson', 'Geography');",
+      "description": "Insert on student",
       "query_index": 27,
+      "username": "william11"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
+      "query_index": 28,
       "username": "william11"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S7581', 'Drew Johnson', 22, 'Geography');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S2812', 22, 'John Stein', 'Biology');",
       "description": "Insert on student",
-      "query_index": 28,
-      "username": "william11"
+      "query_index": 29,
+      "username": "williamskaren"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Biology';",
       "description": "Update on dept_name",
-      "query_index": 29,
-      "username": "williamskaren"
-    },
-    {
-      "type": "insert",
-      "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S2812', 'John Stein', 22, 'Biology');",
-      "description": "Insert on student",
       "query_index": 30,
       "username": "williamskaren"
     },
     {
       "type": "insert",
       "entity": "time_slot",
-      "sql": "INSERT INTO time_slot (time_slot_id, day, start_time, end_time) VALUES ('T630', 'Wednesday', '12:00', '12:50');",
+      "sql": "INSERT INTO time_slot (time_slot_id, start_time, end_time, day) VALUES ('T630', '12:00', '12:50', 'Wednesday');",
       "description": "Insert on time_slot",
       "query_index": 31,
       "username": "vlong"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS6554', 2, 'Run serve my.');",
+      "description": "Insert on course",
+      "query_index": 32,
+      "username": "johngray"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Biology';",
       "description": "Update on dept_name",
-      "query_index": 32,
-      "username": "johngray"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS6554', 'Run serve my.', 2);",
-      "description": "Insert on course",
       "query_index": 33,
       "username": "johngray"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
-      "query_index": 34,
-      "username": "hernandezangela"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I9110');",
       "description": "Insert on instructor",
-      "query_index": 35,
+      "query_index": 34,
       "username": "hernandezangela"
     },
     {
@@ -297,15 +289,15 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 36,
-      "username": "johnsonchristopher"
+      "query_index": 35,
+      "username": "hernandezangela"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S0149', 'Jimmy Adams', 32, 'Geography');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S0149', 32, 'Jimmy Adams', 'Geography');",
       "description": "Insert on student",
-      "query_index": 37,
+      "query_index": 36,
       "username": "johnsonchristopher"
     },
     {
@@ -313,46 +305,54 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 38,
-      "username": "connor93"
+      "query_index": 37,
+      "username": "johnsonchristopher"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S6390', 'Carmen Collins', 23, 'Geography');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S6390', 23, 'Carmen Collins', 'Geography');",
       "description": "Insert on student",
+      "query_index": 38,
+      "username": "connor93"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 39,
       "username": "connor93"
+    },
+    {
+      "type": "update",
+      "entity": "course",
+      "sql": "UPDATE course SET course_id = 'CS0349', year = 2021, semester = 'Fall', room_no = 'R366', time_slot_id = 'T737', sec_id = 'SEC37', building = 'Rodriguez Center';",
+      "description": "Update on course",
+      "query_index": 40,
+      "username": "michelleromero"
     },
     {
       "type": "update",
       "entity": "time_slot",
       "sql": "UPDATE time_slot SET time_slot_id = 'T737', course_id = 'CS0349';",
       "description": "Update on time_slot",
-      "query_index": 40,
-      "username": "michelleromero"
-    },
-    {
-      "type": "update",
-      "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS0349', time_slot_id = 'T737', year = 2021, semester = 'Fall', building = 'Rodriguez Center', sec_id = 'SEC37', room_no = 'R366';",
-      "description": "Update on course",
       "query_index": 41,
       "username": "michelleromero"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
-      "query_index": 42,
-      "username": "katherine37"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I5332');",
       "description": "Insert on instructor",
+      "query_index": 42,
+      "username": "katherine37"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 43,
       "username": "katherine37"
     },
@@ -374,89 +374,89 @@
     },
     {
       "type": "insert",
-      "entity": "dept_name",
-      "sql": "INSERT INTO dept_name (dept_name) VALUES ('Maths');",
-      "description": "Insert on dept_name",
+      "entity": "instructor",
+      "sql": "INSERT INTO instructor (instructor_id) VALUES ('I1028');",
+      "description": "Insert on instructor",
       "query_index": 46,
       "username": "michelleromero"
     },
     {
       "type": "insert",
-      "entity": "instructor",
-      "sql": "INSERT INTO instructor (instructor_id) VALUES ('I1028');",
-      "description": "Insert on instructor",
+      "entity": "dept_name",
+      "sql": "INSERT INTO dept_name (dept_name) VALUES ('Maths');",
+      "description": "Insert on dept_name",
       "query_index": 47,
       "username": "michelleromero"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS2868', 1, 'Likely fill poor.');",
+      "description": "Insert on course",
+      "query_index": 48,
+      "username": "jesus91"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 48,
+      "query_index": 49,
       "username": "jesus91"
     },
     {
-      "type": "insert",
+      "type": "update",
       "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS2868', 'Likely fill poor.', 1);",
-      "description": "Insert on course",
-      "query_index": 49,
-      "username": "jesus91"
+      "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', room_no = 'R433', time_slot_id = 'T630', sec_id = 'SEC09', building = 'Leonard Center';",
+      "description": "Update on course",
+      "query_index": 50,
+      "username": "mcdowellsamuel"
     },
     {
       "type": "update",
       "entity": "time_slot",
       "sql": "UPDATE time_slot SET time_slot_id = 'T630', course_id = 'CS2868';",
       "description": "Update on time_slot",
-      "query_index": 50,
-      "username": "mcdowellsamuel"
-    },
-    {
-      "type": "update",
-      "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS2868', time_slot_id = 'T630', year = 2024, semester = 'Spring', building = 'Leonard Center', sec_id = 'SEC09', room_no = 'R433';",
-      "description": "Update on course",
       "query_index": 51,
       "username": "mcdowellsamuel"
     },
     {
       "type": "insert",
       "entity": "time_slot",
-      "sql": "INSERT INTO time_slot (time_slot_id, day, start_time, end_time) VALUES ('T876', 'Tuesday', '15:00', '15:50');",
+      "sql": "INSERT INTO time_slot (time_slot_id, start_time, end_time, day) VALUES ('T876', '15:00', '15:50', 'Tuesday');",
       "description": "Insert on time_slot",
       "query_index": 52,
       "username": "hernandezangela"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
-      "query_index": 53,
-      "username": "johngray"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I2362');",
       "description": "Insert on instructor",
+      "query_index": 53,
+      "username": "johngray"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 54,
       "username": "johngray"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS8157', 5, 'All such face.');",
+      "description": "Insert on course",
+      "query_index": 55,
+      "username": "william11"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Maths';",
       "description": "Update on dept_name",
-      "query_index": 55,
-      "username": "william11"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS8157', 'All such face.', 5);",
-      "description": "Insert on course",
       "query_index": 56,
       "username": "william11"
     },
@@ -477,51 +477,43 @@
       "username": "jesus91"
     },
     {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'History';",
-      "description": "Update on dept_name",
-      "query_index": 59,
-      "username": "nhall"
-    },
-    {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I8153');",
       "description": "Insert on instructor",
-      "query_index": 60,
+      "query_index": 59,
       "username": "nhall"
     },
     {
       "type": "update",
       "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', salary = 221235.6, sec_id = 'SEC09', instructor_name = 'Charles Bishop';",
+      "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', instructor_name = 'Charles Bishop', sec_id = 'SEC09', salary = 221235.6;",
       "description": "Update on course",
-      "query_index": 61,
+      "query_index": 60,
       "username": "nhall"
     },
     {
       "type": "update",
       "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "sql": "UPDATE dept_name SET dept_name = 'History';",
       "description": "Update on dept_name",
-      "query_index": 62,
-      "username": "jesus91"
-    },
-    {
-      "type": "insert",
-      "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S3158', 'Edward Cook', 19, 'Geography');",
-      "description": "Insert on student",
-      "query_index": 63,
-      "username": "jesus91"
+      "query_index": 61,
+      "username": "nhall"
     },
     {
       "type": "update",
       "entity": "course",
       "sql": "UPDATE course SET course_id = 'CS0349', year = 2021, semester = 'Fall', sec_id = 'SEC37';",
       "description": "Update on course",
-      "query_index": 64,
+      "query_index": 62,
+      "username": "jesus91"
+    },
+    {
+      "type": "insert",
+      "entity": "student",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S3158', 19, 'Edward Cook', 'Geography');",
+      "description": "Insert on student",
+      "query_index": 63,
       "username": "jesus91"
     },
     {
@@ -529,31 +521,31 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 65,
-      "username": "ljohnson"
+      "query_index": 64,
+      "username": "jesus91"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S3514', 'Jonathon Jimenez', 16, 'Geography');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S3514', 16, 'Jonathon Jimenez', 'Geography');",
       "description": "Insert on student",
-      "query_index": 66,
+      "query_index": 65,
       "username": "ljohnson"
     },
     {
       "type": "update",
       "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 67,
-      "username": "hernandezangela"
+      "query_index": 66,
+      "username": "ljohnson"
     },
     {
       "type": "update",
       "entity": "instructor",
       "sql": "UPDATE instructor SET instructor_id = 'I7306';",
       "description": "Update on instructor",
-      "query_index": 68,
+      "query_index": 67,
       "username": "hernandezangela"
     },
     {
@@ -561,14 +553,22 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Biology';",
       "description": "Update on dept_name",
-      "query_index": 69,
-      "username": "johngray"
+      "query_index": 68,
+      "username": "hernandezangela"
     },
     {
       "type": "insert",
       "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS6758', 'Wife fall left.', 4);",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS6758', 4, 'Wife fall left.');",
       "description": "Insert on course",
+      "query_index": 69,
+      "username": "johngray"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
+      "description": "Update on dept_name",
       "query_index": 70,
       "username": "johngray"
     },
@@ -589,26 +589,26 @@
       "username": "jodischneider"
     },
     {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
-      "description": "Update on dept_name",
-      "query_index": 73,
-      "username": "william11"
-    },
-    {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I0080');",
       "description": "Insert on instructor",
-      "query_index": 74,
+      "query_index": 73,
       "username": "william11"
     },
     {
       "type": "update",
       "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS0349', year = 2021, semester = 'Fall', salary = 775952.53, sec_id = 'SEC37', instructor_name = 'Melissa Robbins';",
+      "sql": "UPDATE course SET course_id = 'CS0349', year = 2021, semester = 'Fall', instructor_name = 'Melissa Robbins', sec_id = 'SEC37', salary = 775952.53;",
       "description": "Update on course",
+      "query_index": 74,
+      "username": "william11"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
+      "description": "Update on dept_name",
       "query_index": 75,
       "username": "william11"
     },
@@ -631,80 +631,80 @@
     {
       "type": "insert",
       "entity": "time_slot",
-      "sql": "INSERT INTO time_slot (time_slot_id, day, start_time, end_time) VALUES ('T105', 'Tuesday', '9:00', '9:50');",
+      "sql": "INSERT INTO time_slot (time_slot_id, start_time, end_time, day) VALUES ('T105', '9:00', '9:50', 'Tuesday');",
       "description": "Insert on time_slot",
       "query_index": 78,
       "username": "connor93"
     },
     {
       "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
+      "entity": "course",
+      "sql": "UPDATE course SET course_id = 'CS0349', year = 2021, semester = 'Fall', sec_id = 'SEC37';",
+      "description": "Update on course",
       "query_index": 79,
       "username": "jbaker"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S1095', 'Sara Davis', 32, 'Geography');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S1095', 32, 'Sara Davis', 'Geography');",
       "description": "Insert on student",
       "query_index": 80,
       "username": "jbaker"
     },
     {
       "type": "update",
-      "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS0349', year = 2021, semester = 'Fall', sec_id = 'SEC37';",
-      "description": "Update on course",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 81,
       "username": "jbaker"
+    },
+    {
+      "type": "insert",
+      "entity": "student",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S3617', 29, 'Matthew Stout', 'Maths');",
+      "description": "Insert on student",
+      "query_index": 82,
+      "username": "johngray"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Maths';",
       "description": "Update on dept_name",
-      "query_index": 82,
-      "username": "johngray"
-    },
-    {
-      "type": "insert",
-      "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S3617', 'Matthew Stout', 29, 'Maths');",
-      "description": "Insert on student",
       "query_index": 83,
       "username": "johngray"
-    },
-    {
-      "type": "update",
-      "entity": "student",
-      "sql": "UPDATE student SET student_id = 'S2812';",
-      "description": "Update on student",
-      "query_index": 84,
-      "username": "timothyholt"
     },
     {
       "type": "update",
       "entity": "course",
       "sql": "UPDATE course SET course_id = 'CS0349', year = 2021, semester = 'Fall', sec_id = 'SEC37';",
       "description": "Update on course",
+      "query_index": 84,
+      "username": "timothyholt"
+    },
+    {
+      "type": "update",
+      "entity": "student",
+      "sql": "UPDATE student SET student_id = 'S2812';",
+      "description": "Update on student",
       "query_index": 85,
       "username": "timothyholt"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, budget, credits, building, title) VALUES ('CS6700', 4088982.47, 2, 'Shawn Tower', 'Painting situation.');",
+      "description": "Insert on course",
+      "query_index": 86,
+      "username": "hernandezangela"
     },
     {
       "type": "insert",
       "entity": "dept_name",
       "sql": "INSERT INTO dept_name (dept_name) VALUES ('Arts');",
       "description": "Insert on dept_name",
-      "query_index": 86,
-      "username": "hernandezangela"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, budget, building, credits) VALUES ('CS6700', 'Painting situation.', 4088982.47, 'Shawn Tower', 2);",
-      "description": "Insert on course",
       "query_index": 87,
       "username": "hernandezangela"
     },
@@ -725,34 +725,34 @@
       "username": "michelleromero"
     },
     {
+      "type": "insert",
+      "entity": "student",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S6320', 25, 'Susan Mills', 'Maths');",
+      "description": "Insert on student",
+      "query_index": 90,
+      "username": "ljohnson"
+    },
+    {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Maths';",
       "description": "Update on dept_name",
-      "query_index": 90,
+      "query_index": 91,
       "username": "ljohnson"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S6320', 'Susan Mills', 25, 'Maths');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S8440', 29, 'Amanda Brown', 'History');",
       "description": "Insert on student",
-      "query_index": 91,
-      "username": "ljohnson"
+      "query_index": 92,
+      "username": "wyang"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'History';",
       "description": "Update on dept_name",
-      "query_index": 92,
-      "username": "wyang"
-    },
-    {
-      "type": "insert",
-      "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S8440', 'Amanda Brown', 29, 'History');",
-      "description": "Insert on student",
       "query_index": 93,
       "username": "wyang"
     },
@@ -773,25 +773,25 @@
       "username": "bakerbrenda"
     },
     {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS1466', 4, 'Truth open fill.');",
+      "description": "Insert on course",
       "query_index": 96,
       "username": "johngray"
     },
     {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS1466', 'Truth open fill.', 4);",
-      "description": "Insert on course",
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 97,
       "username": "johngray"
     },
     {
       "type": "insert",
       "entity": "time_slot",
-      "sql": "INSERT INTO time_slot (time_slot_id, day, start_time, end_time) VALUES ('T258', 'Friday', '15:00', '15:50');",
+      "sql": "INSERT INTO time_slot (time_slot_id, start_time, end_time, day) VALUES ('T258', '15:00', '15:50', 'Friday');",
       "description": "Insert on time_slot",
       "query_index": 98,
       "username": "johnsonchristopher"
@@ -814,201 +814,201 @@
     },
     {
       "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
-      "description": "Update on dept_name",
+      "entity": "course",
+      "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', sec_id = 'SEC09';",
+      "description": "Update on course",
       "query_index": 101,
       "username": "nhall"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S1118', 'Tina Mullen', 23, 'Maths');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S1118', 23, 'Tina Mullen', 'Maths');",
       "description": "Insert on student",
       "query_index": 102,
       "username": "nhall"
     },
     {
       "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
+      "description": "Update on dept_name",
+      "query_index": 103,
+      "username": "nhall"
+    },
+    {
+      "type": "update",
       "entity": "course",
       "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', sec_id = 'SEC09';",
       "description": "Update on course",
-      "query_index": 103,
-      "username": "nhall"
+      "query_index": 104,
+      "username": "timothyholt"
     },
     {
       "type": "update",
       "entity": "student",
       "sql": "UPDATE student SET student_id = 'S6390';",
       "description": "Update on student",
-      "query_index": 104,
+      "query_index": 105,
       "username": "timothyholt"
     },
     {
-      "type": "update",
+      "type": "insert",
       "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', sec_id = 'SEC09';",
-      "description": "Update on course",
-      "query_index": 105,
-      "username": "timothyholt"
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS6516', 2, 'Interesting.');",
+      "description": "Insert on course",
+      "query_index": 106,
+      "username": "mcdowellsamuel"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 106,
-      "username": "mcdowellsamuel"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS6516', 'Interesting.', 2);",
-      "description": "Insert on course",
       "query_index": 107,
       "username": "mcdowellsamuel"
-    },
-    {
-      "type": "update",
-      "entity": "student",
-      "sql": "UPDATE student SET student_id = 'S6390';",
-      "description": "Update on student",
-      "query_index": 108,
-      "username": "timothyholt"
     },
     {
       "type": "update",
       "entity": "course",
       "sql": "UPDATE course SET course_id = 'CS0349', year = 2021, semester = 'Fall', sec_id = 'SEC37';",
       "description": "Update on course",
-      "query_index": 109,
+      "query_index": 108,
       "username": "timothyholt"
     },
     {
       "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
-      "description": "Update on dept_name",
-      "query_index": 110,
-      "username": "jesus91"
+      "entity": "student",
+      "sql": "UPDATE student SET student_id = 'S6390';",
+      "description": "Update on student",
+      "query_index": 109,
+      "username": "timothyholt"
     },
     {
       "type": "update",
       "entity": "instructor",
       "sql": "UPDATE instructor SET instructor_id = 'I2362';",
       "description": "Update on instructor",
-      "query_index": 111,
+      "query_index": 110,
       "username": "jesus91"
     },
     {
       "type": "update",
-      "entity": "student",
-      "sql": "UPDATE student SET student_id = 'S6320';",
-      "description": "Update on student",
-      "query_index": 112,
-      "username": "ljohnson"
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
+      "description": "Update on dept_name",
+      "query_index": 111,
+      "username": "jesus91"
     },
     {
       "type": "update",
       "entity": "course",
       "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', sec_id = 'SEC09';",
       "description": "Update on course",
+      "query_index": 112,
+      "username": "ljohnson"
+    },
+    {
+      "type": "update",
+      "entity": "student",
+      "sql": "UPDATE student SET student_id = 'S6320';",
+      "description": "Update on student",
       "query_index": 113,
       "username": "ljohnson"
+    },
+    {
+      "type": "update",
+      "entity": "course",
+      "sql": "UPDATE course SET course_id = 'CS1466', year = 2022, semester = 'Summer', room_no = 'R738', time_slot_id = 'T258', sec_id = 'SEC36', building = 'Leonard Center';",
+      "description": "Update on course",
+      "query_index": 114,
+      "username": "michelleromero"
     },
     {
       "type": "update",
       "entity": "time_slot",
       "sql": "UPDATE time_slot SET time_slot_id = 'T258', course_id = 'CS1466';",
       "description": "Update on time_slot",
-      "query_index": 114,
+      "query_index": 115,
       "username": "michelleromero"
     },
     {
-      "type": "update",
+      "type": "insert",
       "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS1466', time_slot_id = 'T258', year = 2022, semester = 'Summer', building = 'Leonard Center', sec_id = 'SEC36', room_no = 'R738';",
-      "description": "Update on course",
-      "query_index": 115,
-      "username": "michelleromero"
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS8147', 1, 'Soldier behind.');",
+      "description": "Insert on course",
+      "query_index": 116,
+      "username": "williamskaren"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 116,
-      "username": "williamskaren"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS8147', 'Soldier behind.', 1);",
-      "description": "Insert on course",
       "query_index": 117,
       "username": "williamskaren"
     },
     {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
-      "description": "Update on dept_name",
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS4803', 1, 'Scene away.');",
+      "description": "Insert on course",
       "query_index": 118,
       "username": "bakerbrenda"
     },
     {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS4803', 'Scene away.', 1);",
-      "description": "Insert on course",
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
+      "description": "Update on dept_name",
       "query_index": 119,
       "username": "bakerbrenda"
     },
     {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
-      "description": "Update on dept_name",
+      "type": "insert",
+      "entity": "student",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S7242', 29, 'Nancy Clay', 'Maths');",
+      "description": "Insert on student",
       "query_index": 120,
       "username": "vlong"
     },
     {
-      "type": "insert",
-      "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S7242', 'Nancy Clay', 29, 'Maths');",
-      "description": "Insert on student",
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
+      "description": "Update on dept_name",
       "query_index": 121,
       "username": "vlong"
     },
     {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
-      "description": "Update on dept_name",
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS7577', 1, 'Concern our.');",
+      "description": "Insert on course",
       "query_index": 122,
       "username": "vlong"
     },
     {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS7577', 'Concern our.', 1);",
-      "description": "Insert on course",
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Maths';",
+      "description": "Update on dept_name",
       "query_index": 123,
       "username": "vlong"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS1689', 2, 'Data.');",
+      "description": "Insert on course",
+      "query_index": 124,
+      "username": "hernandezangela"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Maths';",
       "description": "Update on dept_name",
-      "query_index": 124,
-      "username": "hernandezangela"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS1689', 'Data.', 2);",
-      "description": "Insert on course",
       "query_index": 125,
       "username": "hernandezangela"
     },
@@ -1030,153 +1030,153 @@
     },
     {
       "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'History';",
-      "description": "Update on dept_name",
+      "entity": "course",
+      "sql": "UPDATE course SET course_id = 'CS1466', year = 2022, semester = 'Summer', sec_id = 'SEC36';",
+      "description": "Update on course",
       "query_index": 128,
       "username": "katherine37"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S2569', 'Savannah Jones', 18, 'History');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S2569', 18, 'Savannah Jones', 'History');",
       "description": "Insert on student",
       "query_index": 129,
       "username": "katherine37"
     },
     {
       "type": "update",
-      "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS1466', year = 2022, semester = 'Summer', sec_id = 'SEC36';",
-      "description": "Update on course",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'History';",
+      "description": "Update on dept_name",
       "query_index": 130,
       "username": "katherine37"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
-      "query_index": 131,
-      "username": "williamskaren"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I6098');",
       "description": "Insert on instructor",
-      "query_index": 132,
+      "query_index": 131,
       "username": "williamskaren"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'History';",
-      "description": "Update on dept_name",
-      "query_index": 133,
-      "username": "jesus91"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, budget, building, credits) VALUES ('CS3911', 'Be suggest.', 556070.16, 'Miguel Center', 2);",
-      "description": "Insert on course",
-      "query_index": 134,
-      "username": "jesus91"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Arts';",
-      "description": "Update on dept_name",
-      "query_index": 135,
-      "username": "johngray"
-    },
-    {
-      "type": "insert",
-      "entity": "instructor",
-      "sql": "INSERT INTO instructor (instructor_id) VALUES ('I8672');",
-      "description": "Insert on instructor",
-      "query_index": 136,
-      "username": "johngray"
-    },
-    {
-      "type": "update",
-      "entity": "student",
-      "sql": "UPDATE student SET student_id = 'S3514';",
-      "description": "Update on student",
-      "query_index": 137,
-      "username": "sarah08"
-    },
-    {
-      "type": "update",
-      "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS1466', year = 2022, semester = 'Summer', sec_id = 'SEC36';",
-      "description": "Update on course",
-      "query_index": 138,
-      "username": "sarah08"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
-      "description": "Update on dept_name",
-      "query_index": 139,
-      "username": "jodischneider"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS6479', 'Response in including.', 4);",
-      "description": "Insert on course",
-      "query_index": 140,
-      "username": "jodischneider"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
-      "description": "Update on dept_name",
-      "query_index": 141,
-      "username": "hernandezangela"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS8323', 'Guess son under always.', 2);",
-      "description": "Insert on course",
-      "query_index": 142,
-      "username": "hernandezangela"
-    },
-    {
-      "type": "update",
-      "entity": "student",
-      "sql": "UPDATE student SET student_id = 'S1118';",
-      "description": "Update on student",
-      "query_index": 143,
-      "username": "ljohnson"
-    },
-    {
-      "type": "update",
-      "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', sec_id = 'SEC09';",
-      "description": "Update on course",
-      "query_index": 144,
-      "username": "ljohnson"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 145,
-      "username": "mcdowellsamuel"
+      "query_index": 132,
+      "username": "williamskaren"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, budget, credits, building, title) VALUES ('CS3911', 556070.16, 2, 'Miguel Center', 'Be suggest.');",
+      "description": "Insert on course",
+      "query_index": 133,
+      "username": "jesus91"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'History';",
+      "description": "Update on dept_name",
+      "query_index": 134,
+      "username": "jesus91"
+    },
+    {
+      "type": "insert",
+      "entity": "instructor",
+      "sql": "INSERT INTO instructor (instructor_id) VALUES ('I8672');",
+      "description": "Insert on instructor",
+      "query_index": 135,
+      "username": "johngray"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Arts';",
+      "description": "Update on dept_name",
+      "query_index": 136,
+      "username": "johngray"
+    },
+    {
+      "type": "update",
+      "entity": "course",
+      "sql": "UPDATE course SET course_id = 'CS1466', year = 2022, semester = 'Summer', sec_id = 'SEC36';",
+      "description": "Update on course",
+      "query_index": 137,
+      "username": "sarah08"
+    },
+    {
+      "type": "update",
+      "entity": "student",
+      "sql": "UPDATE student SET student_id = 'S3514';",
+      "description": "Update on student",
+      "query_index": 138,
+      "username": "sarah08"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS6479', 4, 'Response in including.');",
+      "description": "Insert on course",
+      "query_index": 139,
+      "username": "jodischneider"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
+      "description": "Update on dept_name",
+      "query_index": 140,
+      "username": "jodischneider"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS8323', 2, 'Guess son under always.');",
+      "description": "Insert on course",
+      "query_index": 141,
+      "username": "hernandezangela"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
+      "description": "Update on dept_name",
+      "query_index": 142,
+      "username": "hernandezangela"
+    },
+    {
+      "type": "update",
+      "entity": "course",
+      "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', sec_id = 'SEC09';",
+      "description": "Update on course",
+      "query_index": 143,
+      "username": "ljohnson"
+    },
+    {
+      "type": "update",
+      "entity": "student",
+      "sql": "UPDATE student SET student_id = 'S1118';",
+      "description": "Update on student",
+      "query_index": 144,
+      "username": "ljohnson"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S8529', 'Bryan Miller', 27, 'Geography');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S8529', 27, 'Bryan Miller', 'Geography');",
       "description": "Insert on student",
+      "query_index": 145,
+      "username": "mcdowellsamuel"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 146,
       "username": "mcdowellsamuel"
     },
@@ -1199,7 +1199,7 @@
     {
       "type": "insert",
       "entity": "time_slot",
-      "sql": "INSERT INTO time_slot (time_slot_id, day, start_time, end_time) VALUES ('T400', 'Monday', '12:00', '12:50');",
+      "sql": "INSERT INTO time_slot (time_slot_id, start_time, end_time, day) VALUES ('T400', '12:00', '12:50', 'Monday');",
       "description": "Insert on time_slot",
       "query_index": 149,
       "username": "timothyholt"
@@ -1221,34 +1221,34 @@
       "username": "johngray"
     },
     {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS2103', 3, 'Tonight generation.');",
+      "description": "Insert on course",
+      "query_index": 152,
+      "username": "connor93"
+    },
+    {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 152,
+      "query_index": 153,
       "username": "connor93"
     },
     {
       "type": "insert",
       "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS2103', 'Tonight generation.', 3);",
+      "sql": "INSERT INTO course (course_id, budget, credits, building, title) VALUES ('CS8815', 3359197.31, 2, 'Shannon Complex', 'Same true.');",
       "description": "Insert on course",
-      "query_index": 153,
-      "username": "connor93"
+      "query_index": 154,
+      "username": "bakerbrenda"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Biology';",
       "description": "Update on dept_name",
-      "query_index": 154,
-      "username": "bakerbrenda"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, budget, building, credits) VALUES ('CS8815', 'Same true.', 3359197.31, 'Shannon Complex', 2);",
-      "description": "Insert on course",
       "query_index": 155,
       "username": "bakerbrenda"
     },
@@ -1270,170 +1270,162 @@
     },
     {
       "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
-      "description": "Update on dept_name",
+      "entity": "instructor",
+      "sql": "UPDATE instructor SET instructor_id = 'I7306';",
+      "description": "Update on instructor",
       "query_index": 158,
       "username": "william11"
     },
     {
       "type": "update",
-      "entity": "instructor",
-      "sql": "UPDATE instructor SET instructor_id = 'I7306';",
-      "description": "Update on instructor",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
+      "description": "Update on dept_name",
       "query_index": 159,
       "username": "william11"
     },
     {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS3275', 1, 'Task market morning.');",
+      "description": "Insert on course",
       "query_index": 160,
       "username": "williamskaren"
     },
     {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS3275', 'Task market morning.', 1);",
-      "description": "Insert on course",
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
       "query_index": 161,
       "username": "williamskaren"
+    },
+    {
+      "type": "insert",
+      "entity": "student",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S4008', 19, 'Jennifer Rush', 'Geography');",
+      "description": "Insert on student",
+      "query_index": 162,
+      "username": "jbaker"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 162,
-      "username": "jbaker"
-    },
-    {
-      "type": "insert",
-      "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S4008', 'Jennifer Rush', 19, 'Geography');",
-      "description": "Insert on student",
       "query_index": 163,
       "username": "jbaker"
     },
     {
       "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
-      "description": "Update on dept_name",
+      "entity": "course",
+      "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', sec_id = 'SEC09';",
+      "description": "Update on course",
       "query_index": 164,
       "username": "loretta65"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S7416', 'Ronald Nguyen', 24, 'Biology');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S7416', 24, 'Ronald Nguyen', 'Biology');",
       "description": "Insert on student",
       "query_index": 165,
       "username": "loretta65"
     },
     {
       "type": "update",
-      "entity": "course",
-      "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', sec_id = 'SEC09';",
-      "description": "Update on course",
-      "query_index": 166,
-      "username": "loretta65"
-    },
-    {
-      "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Biology';",
       "description": "Update on dept_name",
-      "query_index": 167,
-      "username": "ljohnson"
+      "query_index": 166,
+      "username": "loretta65"
     },
     {
       "type": "update",
       "entity": "instructor",
       "sql": "UPDATE instructor SET instructor_id = 'I6737';",
       "description": "Update on instructor",
-      "query_index": 168,
+      "query_index": 167,
       "username": "ljohnson"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Arts';",
-      "description": "Update on dept_name",
-      "query_index": 169,
-      "username": "jbaker"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS6950', 'Dinner glass.', 2);",
-      "description": "Insert on course",
-      "query_index": 170,
-      "username": "jbaker"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Biology';",
       "description": "Update on dept_name",
-      "query_index": 171,
-      "username": "timothyholt"
+      "query_index": 168,
+      "username": "ljohnson"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS6950', 2, 'Dinner glass.');",
+      "description": "Insert on course",
+      "query_index": 169,
+      "username": "jbaker"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Arts';",
+      "description": "Update on dept_name",
+      "query_index": 170,
+      "username": "jbaker"
     },
     {
       "type": "insert",
       "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S0581', 'Kelly Herring', 19, 'Biology');",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S0581', 19, 'Kelly Herring', 'Biology');",
       "description": "Insert on student",
-      "query_index": 172,
+      "query_index": 171,
       "username": "timothyholt"
     },
     {
       "type": "update",
       "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
       "description": "Update on dept_name",
-      "query_index": 173,
-      "username": "hernandezangela"
+      "query_index": 172,
+      "username": "timothyholt"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I4163');",
       "description": "Insert on instructor",
-      "query_index": 174,
+      "query_index": 173,
       "username": "hernandezangela"
     },
     {
       "type": "update",
       "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 175,
-      "username": "wyang"
+      "query_index": 174,
+      "username": "hernandezangela"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I3012');",
       "description": "Insert on instructor",
-      "query_index": 176,
+      "query_index": 175,
       "username": "wyang"
     },
     {
       "type": "update",
       "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Arts';",
+      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
       "description": "Update on dept_name",
-      "query_index": 177,
+      "query_index": 176,
       "username": "wyang"
     },
     {
       "type": "insert",
       "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS7502', 'Cause first.', 4);",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS7502', 4, 'Cause first.');",
       "description": "Insert on course",
-      "query_index": 178,
+      "query_index": 177,
       "username": "wyang"
     },
     {
@@ -1441,79 +1433,47 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Arts';",
       "description": "Update on dept_name",
-      "query_index": 179,
-      "username": "johngray"
+      "query_index": 178,
+      "username": "wyang"
     },
     {
       "type": "insert",
       "entity": "instructor",
       "sql": "INSERT INTO instructor (instructor_id) VALUES ('I6879');",
       "description": "Insert on instructor",
-      "query_index": 180,
+      "query_index": 179,
       "username": "johngray"
     },
     {
       "type": "update",
-      "entity": "student",
-      "sql": "UPDATE student SET student_id = 'S7581';",
-      "description": "Update on student",
-      "query_index": 181,
-      "username": "hernandezangela"
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Arts';",
+      "description": "Update on dept_name",
+      "query_index": 180,
+      "username": "johngray"
     },
     {
       "type": "update",
       "entity": "course",
       "sql": "UPDATE course SET course_id = 'CS2868', year = 2024, semester = 'Spring', sec_id = 'SEC09';",
       "description": "Update on course",
-      "query_index": 182,
+      "query_index": 181,
       "username": "hernandezangela"
     },
     {
       "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
-      "description": "Update on dept_name",
-      "query_index": 183,
-      "username": "mcdowellsamuel"
+      "entity": "student",
+      "sql": "UPDATE student SET student_id = 'S7581';",
+      "description": "Update on student",
+      "query_index": 182,
+      "username": "hernandezangela"
     },
     {
       "type": "update",
       "entity": "instructor",
       "sql": "UPDATE instructor SET instructor_id = 'I5332';",
       "description": "Update on instructor",
-      "query_index": 184,
-      "username": "mcdowellsamuel"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
-      "description": "Update on dept_name",
-      "query_index": 185,
-      "username": "katherine37"
-    },
-    {
-      "type": "insert",
-      "entity": "student",
-      "sql": "INSERT INTO student (student_id, student_name, tot_cred, dept_name) VALUES ('S2654', 'Kayla Anderson', 20, 'Biology');",
-      "description": "Insert on student",
-      "query_index": 186,
-      "username": "katherine37"
-    },
-    {
-      "type": "update",
-      "entity": "dept_name",
-      "sql": "UPDATE dept_name SET dept_name = 'History';",
-      "description": "Update on dept_name",
-      "query_index": 187,
-      "username": "mcdowellsamuel"
-    },
-    {
-      "type": "insert",
-      "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS8717', 'Hit it seat spend.', 5);",
-      "description": "Insert on course",
-      "query_index": 188,
+      "query_index": 183,
       "username": "mcdowellsamuel"
     },
     {
@@ -1521,30 +1481,70 @@
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Geography';",
       "description": "Update on dept_name",
-      "query_index": 189,
-      "username": "williamskaren"
+      "query_index": 184,
+      "username": "mcdowellsamuel"
     },
     {
       "type": "insert",
-      "entity": "instructor",
-      "sql": "INSERT INTO instructor (instructor_id) VALUES ('I9743');",
-      "description": "Insert on instructor",
-      "query_index": 190,
-      "username": "williamskaren"
+      "entity": "student",
+      "sql": "INSERT INTO student (student_id, tot_cred, student_name, dept_name) VALUES ('S2654', 20, 'Kayla Anderson', 'Biology');",
+      "description": "Insert on student",
+      "query_index": 185,
+      "username": "katherine37"
     },
     {
       "type": "update",
       "entity": "dept_name",
       "sql": "UPDATE dept_name SET dept_name = 'Biology';",
       "description": "Update on dept_name",
-      "query_index": 191,
-      "username": "michelleromero"
+      "query_index": 186,
+      "username": "katherine37"
     },
     {
       "type": "insert",
       "entity": "course",
-      "sql": "INSERT INTO course (course_id, title, credits) VALUES ('CS8171', 'Best parent person.', 3);",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS8717', 5, 'Hit it seat spend.');",
       "description": "Insert on course",
+      "query_index": 187,
+      "username": "mcdowellsamuel"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'History';",
+      "description": "Update on dept_name",
+      "query_index": 188,
+      "username": "mcdowellsamuel"
+    },
+    {
+      "type": "insert",
+      "entity": "instructor",
+      "sql": "INSERT INTO instructor (instructor_id) VALUES ('I9743');",
+      "description": "Insert on instructor",
+      "query_index": 189,
+      "username": "williamskaren"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Geography';",
+      "description": "Update on dept_name",
+      "query_index": 190,
+      "username": "williamskaren"
+    },
+    {
+      "type": "insert",
+      "entity": "course",
+      "sql": "INSERT INTO course (course_id, credits, title) VALUES ('CS8171', 3, 'Best parent person.');",
+      "description": "Insert on course",
+      "query_index": 191,
+      "username": "michelleromero"
+    },
+    {
+      "type": "update",
+      "entity": "dept_name",
+      "sql": "UPDATE dept_name SET dept_name = 'Biology';",
+      "description": "Update on dept_name",
       "query_index": 192,
       "username": "michelleromero"
     },
@@ -1575,7 +1575,7 @@
     {
       "type": "insert",
       "entity": "time_slot",
-      "sql": "INSERT INTO time_slot (time_slot_id, day, start_time, end_time) VALUES ('T601', 'Friday', '9:00', '9:50');",
+      "sql": "INSERT INTO time_slot (time_slot_id, start_time, end_time, day) VALUES ('T601', '9:00', '9:50', 'Friday');",
       "description": "Insert on time_slot",
       "query_index": 196,
       "username": "brittanybailey"
