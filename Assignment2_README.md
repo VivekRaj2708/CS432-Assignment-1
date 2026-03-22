@@ -39,3 +39,23 @@ CS432-Assignment-2/
 ```
 
 ## Setup and Steps to execute the code
+### Starting the Server
+
+**Windows:**
+```powershell
+.\server.ps1
+```
+
+**Linux/macOS:**
+```bash
+chmod +x server.sh
+./server.sh
+```
+
+The server will start on `http://127.0.0.1:8000` by default.
+
+### Running the Main Application
+
+```bash
+python Runner.py
+```
