@@ -2,11 +2,7 @@ import json
 from Utils.Classify import FieldClassifier
 
 
-def mongo_schema_maker(schema, filename="mongo_schema.log"):       #not a lot as mongo is not realtional database
-    #just creating a collection
-    with open(filename,"w") as f:
-        for table in schema:
-            f.write(f'db.createCollection("{table}");\n')
+
 
 def mongo_value(v):
     if v is None:

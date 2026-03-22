@@ -1,0 +1,101 @@
+{
+  "tables": {
+    "course": {
+      "primary_key": "course_id",
+      "columns": [
+        "course_id",
+        "instructor_name",
+        "salary",
+        "budget",
+        "building",
+        "credits",
+        "time_slot_id",
+        "title",
+        "room_no",
+        "sec_id",
+        "year",
+        "semester"
+      ],
+      "foreign_keys": []
+    },
+    "dept_name": {
+      "primary_key": "dept_name",
+      "columns": [
+        "dept_name"
+      ],
+      "foreign_keys": []
+    },
+    "time_slot": {
+      "primary_key": "time_slot_id",
+      "columns": [
+        "time_slot_id",
+        "course_id",
+        "day",
+        "end_time",
+        "start_time"
+      ],
+      "foreign_keys": []
+    },
+    "student": {
+      "primary_key": "student_id",
+      "columns": [
+        "student_id",
+        "student_name",
+        "tot_cred",
+        "dept_name",
+        "instructor_id"
+      ],
+      "foreign_keys": []
+    },
+    "instructor": {
+      "primary_key": "instructor_id",
+      "columns": [
+        "instructor_id",
+        "student_id"
+      ],
+      "foreign_keys": []
+    }
+  },
+  "functional_dependencies": {
+    "course_id": [
+      "instructor_name",
+      "salary",
+      "budget",
+      "building",
+      "credits",
+      "time_slot_id",
+      "title",
+      "room_no",
+      "sec_id",
+      "year",
+      "semester"
+    ],
+    "time_slot_id": [
+      "course_id",
+      "building",
+      "sec_id",
+      "end_time",
+      "start_time",
+      "room_no",
+      "year",
+      "day",
+      "semester"
+    ],
+    "student_id": [
+      "tot_cred",
+      "budget",
+      "building",
+      "student_name",
+      "dept_name",
+      "instructor_id"
+    ],
+    "instructor_id": [
+      "student_id",
+      "instructor_name"
+    ]
+  },
+  "foreign_keys": [],
+  "many_to_many": [
+    "prereq_id"
+  ]
+}

@@ -1,0 +1,194 @@
+{"type": "CREATE_TABLE", "table_name": "course", "columns": ["course_id", "room_no", "building", "budget", "instructor_name", "semester", "credits", "title", "year", "sec_id", "salary", "time_slot_id"], "sql": "CREATE TABLE IF NOT EXISTS course (\n  budget VARCHAR(255),\n  building VARCHAR(255),\n  course_id VARCHAR(255) PRIMARY KEY,\n  credits VARCHAR(255),\n  instructor_name VARCHAR(255),\n  room_no VARCHAR(255),\n  salary VARCHAR(255),\n  sec_id VARCHAR(255),\n  semester VARCHAR(255),\n  time_slot_id VARCHAR(255),\n  title VARCHAR(255),\n  year VARCHAR(255)\n);"}
+{"type": "CREATE_TABLE", "table_name": "instructor", "columns": ["instructor_id", "student_id"], "sql": "CREATE TABLE IF NOT EXISTS instructor (\n  instructor_id VARCHAR(255) PRIMARY KEY,\n  student_id VARCHAR(255)\n);"}
+{"type": "CREATE_TABLE", "table_name": "dept_name", "columns": ["dept_name"], "sql": "CREATE TABLE IF NOT EXISTS dept_name (\n  dept_name VARCHAR(255) PRIMARY KEY\n);"}
+{"type": "CREATE_TABLE", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "instructor_id", "tot_cred"], "sql": "CREATE TABLE IF NOT EXISTS student (\n  dept_name VARCHAR(255),\n  instructor_id VARCHAR(255),\n  student_id VARCHAR(255) PRIMARY KEY,\n  student_name VARCHAR(255),\n  tot_cred VARCHAR(255)\n);"}
+{"type": "CREATE_TABLE", "table_name": "time_slot", "columns": ["time_slot_id", "end_time", "start_time", "course_id", "day"], "sql": "CREATE TABLE IF NOT EXISTS time_slot (\n  course_id VARCHAR(255),\n  day VARCHAR(255),\n  end_time VARCHAR(255),\n  start_time VARCHAR(255),\n  time_slot_id VARCHAR(255) PRIMARY KEY\n);"}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS1029", 5, "Low."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS6074", 2, "Dinner glass."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S9915", "Geography", "Brandi Cannon", 23]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS1773", 4, "Likely fill poor."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "time_slot", "columns": ["time_slot_id", "end_time", "start_time", "day"], "values": ["T737", "12:50", "12:00", "Monday"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I7306"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I2417"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS0349", 1, "Same true."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["History"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I6737"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I0793"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S7581", "Geography", "Drew Johnson", 22]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S2812", "Biology", "John Stein", 22]}
+{"type": "INSERT", "table_name": "time_slot", "columns": ["time_slot_id", "end_time", "start_time", "day"], "values": ["T630", "12:50", "12:00", "Wednesday"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS6554", 2, "Run serve my."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I9110"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S0149", "Geography", "Jimmy Adams", 32]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S6390", "Geography", "Carmen Collins", 23]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "room_no", "building", "semester", "year", "sec_id", "time_slot_id"], "values": ["CS0349", "R366", "Rodriguez Center", "Fall", 2021, "SEC37", "T737"]}
+{"type": "INSERT", "table_name": "time_slot", "columns": ["time_slot_id", "course_id"], "values": ["T737", "CS0349"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I5332"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I9110"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I1028"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS2868", 1, "Likely fill poor."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "room_no", "building", "semester", "year", "sec_id", "time_slot_id"], "values": ["CS2868", "R433", "Leonard Center", "Spring", 2024, "SEC09", "T630"]}
+{"type": "INSERT", "table_name": "time_slot", "columns": ["time_slot_id", "course_id"], "values": ["T630", "CS2868"]}
+{"type": "INSERT", "table_name": "time_slot", "columns": ["time_slot_id", "end_time", "start_time", "day"], "values": ["T876", "15:50", "15:00", "Tuesday"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I2362"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS8157", 5, "All such face."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS2868", "Spring", 2024, "SEC09"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I0793"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "instructor_name", "semester", "year", "sec_id", "salary"], "values": ["CS2868", "Charles Bishop", "Spring", 2024, "SEC09", 221235.6]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I8153"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["History"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S3158", "Geography", "Edward Cook", 19]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S3514", "Geography", "Jonathon Jimenez", 16]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I7306"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS6758", 4, "Wife fall left."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS2868", "Spring", 2024, "SEC09"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I1028"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "instructor_name", "semester", "year", "sec_id", "salary"], "values": ["CS0349", "Melissa Robbins", "Fall", 2021, "SEC37", 775952.53]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I0080"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I7306"]}
+{"type": "INSERT", "table_name": "time_slot", "columns": ["time_slot_id", "end_time", "start_time", "day"], "values": ["T105", "9:50", "9:00", "Tuesday"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S1095", "Geography", "Sara Davis", 32]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S3617", "Maths", "Matthew Stout", 29]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id"], "values": ["S2812"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "building", "budget", "credits", "title"], "values": ["CS6700", "Shawn Tower", 4088982.47, 2, "Painting situation."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Arts"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I7306"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S6320", "Maths", "Susan Mills", 25]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["History"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S8440", "History", "Amanda Brown", 29]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I0793"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS1466", 4, "Truth open fill."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "time_slot", "columns": ["time_slot_id", "end_time", "start_time", "day"], "values": ["T258", "15:50", "15:00", "Friday"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id", "student_id"], "values": ["I0080", "S3158"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "instructor_id"], "values": ["S3158", "I0080"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS2868", "Spring", 2024, "SEC09"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S1118", "Maths", "Tina Mullen", 23]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS2868", "Spring", 2024, "SEC09"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id"], "values": ["S6390"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS6516", 2, "Interesting."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id"], "values": ["S6390"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I2362"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS2868", "Spring", 2024, "SEC09"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id"], "values": ["S6320"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "room_no", "building", "semester", "year", "sec_id", "time_slot_id"], "values": ["CS1466", "R738", "Leonard Center", "Summer", 2022, "SEC36", "T258"]}
+{"type": "INSERT", "table_name": "time_slot", "columns": ["time_slot_id", "course_id"], "values": ["T258", "CS1466"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS8147", 1, "Soldier behind."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS4803", 1, "Scene away."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S7242", "Maths", "Nancy Clay", 29]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS7577", 1, "Concern our."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS1689", 2, "Data."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Maths"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS2868", "Spring", 2024, "SEC09"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I5332"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS1466", "Summer", 2022, "SEC36"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["History"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S2569", "History", "Savannah Jones", 18]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I6098"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "building", "budget", "credits", "title"], "values": ["CS3911", "Miguel Center", 556070.16, 2, "Be suggest."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["History"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I8672"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Arts"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS1466", "Summer", 2022, "SEC36"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id"], "values": ["S3514"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS6479", 4, "Response in including."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS8323", 2, "Guess son under always."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS2868", "Spring", 2024, "SEC09"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id"], "values": ["S1118"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S8529", "Geography", "Bryan Miller", 27]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I8153"]}
+{"type": "INSERT", "table_name": "time_slot", "columns": ["time_slot_id", "end_time", "start_time", "day"], "values": ["T400", "12:50", "12:00", "Monday"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS1466", "Summer", 2022, "SEC36"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I7306"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS2103", 3, "Tonight generation."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "building", "budget", "credits", "title"], "values": ["CS8815", "Shannon Complex", 3359197.31, 2, "Same true."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id", "student_id"], "values": ["I9110", "S0149"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "instructor_id"], "values": ["S0149", "I9110"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I7306"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS3275", 1, "Task market morning."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S4008", "Geography", "Jennifer Rush", 19]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS2868", "Spring", 2024, "SEC09"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S7416", "Biology", "Ronald Nguyen", 24]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I6737"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS6950", 2, "Dinner glass."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Arts"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S0581", "Biology", "Kelly Herring", 19]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I4163"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I3012"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS7502", 4, "Cause first."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Arts"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I6879"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Arts"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS2868", "Spring", 2024, "SEC09"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id"], "values": ["S7581"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I5332"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "student", "columns": ["student_id", "dept_name", "student_name", "tot_cred"], "values": ["S2654", "Biology", "Kayla Anderson", 20]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS8717", 5, "Hit it seat spend."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["History"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I9743"]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Geography"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "credits", "title"], "values": ["CS8171", 3, "Best parent person."]}
+{"type": "INSERT", "table_name": "dept_name", "columns": ["dept_name"], "values": ["Biology"]}
+{"type": "INSERT", "table_name": "course", "columns": ["course_id", "semester", "year", "sec_id"], "values": ["CS0349", "Fall", 2021, "SEC37"]}
+{"type": "INSERT", "table_name": "instructor", "columns": ["instructor_id"], "values": ["I7306"]}
