@@ -1,7 +1,7 @@
 {
   "student": {
-    "ID": ["VARCHAR(5)", "PRIMARY KEY"],
-    "name": ["VARCHAR(20)", "NOT NULL"],
+    "student_id": ["VARCHAR(5)", "PRIMARY KEY"],
+    "student_name": ["VARCHAR(20)", "NOT NULL"],
     "dept_name": ["VARCHAR(20)", "FK -> department(dept_name)"],
     "tot_cred": ["INT", "DEFAULT 0"],
     "table@constraints": [
@@ -10,8 +10,8 @@
   },
 
   "instructor": {
-    "ID": ["VARCHAR(5)", "PRIMARY KEY"],
-    "name": ["VARCHAR(20)", "NOT NULL"],
+    "instructor_id": ["VARCHAR(5)", "PRIMARY KEY"],
+    "instructor_name": ["VARCHAR(20)", "NOT NULL"],
     "dept_name": ["VARCHAR(20)", "FK -> department(dept_name)"],
     "salary": ["DECIMAL(10,2)", "CHECK (salary > 0)"],
     "table@constraints": [
@@ -72,39 +72,39 @@
   },
 
   "takes": {
-    "ID": ["VARCHAR(5)", "FK -> student(ID)"],
+    "student_id": ["VARCHAR(5)", "FK -> student(ID)"],
     "course_id": ["VARCHAR(8)", "FK -> section(course_id)"],
     "sec_id": ["VARCHAR(8)"],
     "semester": ["VARCHAR(6)"],
     "year": ["INT"],
     "grade": ["VARCHAR(2)"],
     "table@constraints": [
-      "PRIMARY KEY (ID, course_id, sec_id, semester, year)",
-      "FOREIGN KEY (ID) REFERENCES student(ID)",
+      "PRIMARY KEY (student_id, course_id, sec_id, semester, year)",
+      "FOREIGN KEY (student_id) REFERENCES student(student_id)",
       "FOREIGN KEY (course_id, sec_id, semester, year) REFERENCES section(course_id, sec_id, semester, year)"
     ]
   },
 
   "teaches": {
-    "ID": ["VARCHAR(5)", "FK -> instructor(ID)"],
+    "instructor_id": ["VARCHAR(5)", "FK -> instructor(instructor_id)"],
     "course_id": ["VARCHAR(8)", "FK -> section(course_id)"],
     "sec_id": ["VARCHAR(8)"],
     "semester": ["VARCHAR(6)"],
     "year": ["INT"],
     "table@constraints": [
-      "PRIMARY KEY (ID, course_id, sec_id, semester, year)",
-      "FOREIGN KEY (ID) REFERENCES instructor(ID)",
+      "PRIMARY KEY (instructor_id, course_id, sec_id, semester, year)",
+      "FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id)",
       "FOREIGN KEY (course_id, sec_id, semester, year) REFERENCES section(course_id, sec_id, semester, year)"
     ]
   },
 
   "advisor": {
-    "s_id": ["VARCHAR(5)", "FK -> student(ID)"],
-    "i_id": ["VARCHAR(5)", "FK -> instructor(ID)"],
+    "student_id": ["VARCHAR(5)", "FK -> student(student_id)"],
+    "instructor_id": ["VARCHAR(5)", "FK -> instructor(instructor_id)"],
     "table@constraints": [
-      "PRIMARY KEY (s_id)",
-      "FOREIGN KEY (s_id) REFERENCES student(ID)",
-      "FOREIGN KEY (i_id) REFERENCES instructor(ID)"
+      "PRIMARY KEY (student_id)",
+      "FOREIGN KEY (student_id) REFERENCES student(student_id)",
+      "FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id)"
     ]
   },
 
