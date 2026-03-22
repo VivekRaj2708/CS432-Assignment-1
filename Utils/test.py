@@ -1,13 +1,8 @@
-"""
-Run this from the same folder as schema_infere.py:
-    python test_schema.py
-"""
-
 import json
 from collections import deque
 from schema_maker import SchemaInfere
 
-# ── SSE data ─────────────────────────────────────────────────────────
+#user input
 RAW = """event: init
 data: {"username": {"global_key": "true", "unique": "true"}, "student_id": {"unique": "true"}, "instructor_id": {"unique": "true"}, "time_slot_id": {"unique": "true"}, "course_id": {"unique": "true"}, "dept_name": {"unique": "true"}, "sec_id": {}, "title": {}, "credits": {}, "building": {}, "room_no": {}, "tot_cred": {}, "student_name": {}, "instructor_name": {}, "semester": {}, "year": {}, "day": {}, "start_time": {}, "end_time": {}, "capacity": {}, "grade": {}, "prereq_id": {}, "salary": {}, "budget": {}}
 
@@ -213,7 +208,7 @@ event: create
 data: {"instructor_id": "I7306", "course_id": "CS0349", "sec_id": "SEC37", "semester": "Fall", "year": 2021, "username": "johnsonchristopher"}"""
 
 
-# ── Parse SSE ─────────────────────────────────────────────────────────
+#Data parser
 def parse_sse(text):
     init_config = None
     records = deque()
@@ -254,7 +249,7 @@ records.extend(extra)
 print(f"Total items (with extra events): {len(records)}")
 print()
 
-# ── Run engine ────────────────────────────────────────────────────────
+
 engine = SchemaInfere(
     unique_fields=unique_fields,
     global_key=global_key,
@@ -262,7 +257,7 @@ engine = SchemaInfere(
 )
 schema = engine.queue_reader(records)
 
-# ── Print schema ──────────────────────────────────────────────────────
+
 print("\n=== TABLES ===")
 for tname, tdef in schema["tables"].items():
     pk   = tdef.get("primary_key", "composite")
