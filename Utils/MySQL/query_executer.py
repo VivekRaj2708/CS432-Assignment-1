@@ -213,7 +213,7 @@ def main():
     executor = MySQLQueryExecutor(
         host='localhost',      # Change as needed
         user='root',           # Change as needed
-        password='password',   # Change as needed
+        password='p',   # Change as needed
         database='university'  # Change as needed
     )
 
