@@ -5,8 +5,6 @@ import asyncio
 from collections import deque
 from Utils.Log import logger
 
-
-
 session = requests.Session()
 session.headers.update({
     'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -52,6 +50,7 @@ async def stream_sse_records(count: int, queue: deque,
             async with httpx.AsyncClient(timeout=timeout) as client:
                 async with client.stream('GET', url, headers=headers) as resp:
                     resp.raise_for_status()
+                    current_event = None
                     async for raw_line in resp.aiter_lines():
                         # termination check
                         if stop_event is not None and stop_event.is_set():
@@ -68,14 +67,16 @@ async def stream_sse_records(count: int, queue: deque,
                         if raw_line is None:
                             continue
                         line = raw_line.strip()
-
+                        if line.startswith('event:'):
+                            current_event = line[len('event: '):].strip()
                         if line.startswith('data:'):
                             data_str = line[len('data: '):].strip()
                             try:
                                 record = json.loads(data_str)
                                 if 't_stamp' not in record or record['t_stamp'] is None:
                                     record['t_stamp'] = time.time()
-                                queue.append(record)
+                                rec = {"event":current_event, "data":record}
+                                queue.append(rec)
                             except json.JSONDecodeError as exc:
                                 logger.warning('Failed to parse JSON from SSE data: %s', exc)
         except Exception as exc:
