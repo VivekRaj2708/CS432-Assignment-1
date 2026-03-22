@@ -1,5 +1,6 @@
 import asyncio
 from collections import deque
+import json
 
 from Utils.Network import stream_sse_records
 from Utils.MapRegister import MapRegister
@@ -9,10 +10,14 @@ from sql_logger import sql_from_queue
 from mongo_logger import mongo_from_queue
 from Storage.MySQLClient import MySQLClient
 from Storage.MongoClient import MongoDBClient
+from Utils.schema_maker import SchemaInfere
+from Utils.sse_parser import parse_sse_queue
+from Utils.MySQL.query_executer import MySQLQueryExecutor
+from Utils.MongoDB.Exec import Exec
 
 
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 import os
 
 p = os.getenv("p")
@@ -46,6 +51,41 @@ async def _flush(
         f"MongoDB: {mongo_result}"
     )
 
+def _ops_log_to_mongo_queries(log_path: str): #reads and converts the operations.log entrys
+    queries = []
+    try:
+        with open(log_path) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                op = json.loads(line)
+
+                op_type = op.get("type", "").upper()
+                entity  = op.get("table_name", "")
+
+                if op_type == "INSERT":
+                    data = dict(zip(op.get("columns", []), op.get("values", [])))
+                    queries.append({"action": "add", "entity": entity, "data": data})
+
+                elif op_type == "UPDATE":
+                    data  = dict(zip(op.get("columns", []), op.get("values", [])))
+                    where = op.get("where", {})
+                    queries.append({"action": "change", "entity": entity,
+                                    "where": where, "data": data})
+
+                elif op_type == "DELETE":
+                    queries.append({"action": "remove", "entity": entity,
+                                    "where": op.get("where", {})})
+
+                elif op_type == "SELECT":
+                    queries.append({"action": "get", "entity": entity,
+                                    "fields": op.get("columns", []),
+                                    "where": op.get("where", {})})
+
+    except FileNotFoundError:
+        pass
+    return queries
 
 async def Main(queue, stop_event):
     register   = MapRegister()
@@ -70,6 +110,12 @@ async def Main(queue, stop_event):
     batch_count = 0
     batch_num   = 1
 
+    schema_engine= None        # created after first init event
+    schema_raw_buffer= deque()     # collects raw items for schema engine
+    schema_initialised= False
+    mongo_exec= None
+    os.makedirs("schema_output", exist_ok=True)
+
     task = asyncio.create_task(
         stream_sse_records(
             count         = 10000,
@@ -83,7 +129,7 @@ async def Main(queue, stop_event):
         while printed < TOTAL:
             if queue:
                 record = queue.popleft()
-
+                schema_raw_buffer.append(record)
                 attach_bitemporal(record)
                 sys_ingested_at = record["sys_ingested_at"]
                 t_stamp         = record["t_stamp"]
@@ -105,6 +151,50 @@ async def Main(queue, stop_event):
                 batch_count += 1
 
                 if batch_count >= BATCH_SIZE:
+                    #running schema engine
+                    try:
+                        unique_fields, global_key, event_queue = parse_sse_queue(
+                            deque(schema_raw_buffer)
+                        )
+                        if not schema_initialised:
+                            schema_engine = SchemaInfere(
+                                unique_fields = unique_fields,
+                                global_key    = global_key,
+                                output_dir    = "schema_output",
+                            )
+                            sql_executor = MySQLQueryExecutor(
+                                host     = "localhost",
+                                user     = "root",
+                                password = p,
+                                database = "university",
+                            )
+                            sql_executor.connect()
+
+                            mongo_exec = Exec(db_name="university", worker_count=3)
+                            await mongo_exec.start()
+
+                            schema_initialised = True
+
+                        schema_engine.queue_reader(event_queue)
+                        sql_executor.execute_generated_queries(
+                            "schema_output/operations_sql.json",
+                            stop_on_error = False,
+                        )
+                        sql_executor.save_execution_report(
+                            f"schema_output/execution_report_batch_{batch_num}.json"
+                        )
+                        
+                        mongo_queries = _ops_log_to_mongo_queries(
+                            "schema_output/operations.log"
+                        )
+                        await mongo_exec.add_many_to_queue(mongo_queries)
+
+                    except ValueError:
+                        # when init event not yet seen
+                        pass
+
+                    schema_raw_buffer.clear()
+
                     await _flush(updates, classifier, mysql_client, mongo_client, batch_num)
                     updates.clear()
                     batch_count = 0
@@ -118,6 +208,31 @@ async def Main(queue, stop_event):
 
         if updates:
             await _flush(updates, classifier, mysql_client, mongo_client, batch_num="final")
+
+        #schema flush for any remaining buffered items
+        if schema_raw_buffer and schema_engine:
+            try:
+                _, _, event_queue = parse_sse_queue(deque(schema_raw_buffer))
+                schema_engine.queue_reader(event_queue)
+
+                sql_executor.execute_generated_queries(
+                    "schema_output/operations_sql.json",
+                    stop_on_error = False,
+                )
+                sql_executor.save_execution_report(
+                    "schema_output/execution_report_final.json"
+                )
+                
+                mongo_queries = _ops_log_to_mongo_queries(
+                    "schema_output/operations.log"
+                )
+                await mongo_exec.add_many_to_queue(mongo_queries)
+
+            except ValueError:
+                pass
+        
+        if schema_initialised:
+            sql_executor.disconnect()
 
         with open("Map.log", "w") as f:
             f.write(repr(register))
