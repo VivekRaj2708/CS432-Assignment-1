@@ -352,6 +352,8 @@ def generate_add_req():
             common = "student_id"
         else:
             common = "instructor_id"
+        if common not in rec:
+            return generate_add_req()
         rec_ex = TABLE_GENERATORS[tabs[1]](rec[common])
         if rec_ex:
             rec.update(rec_ex)
