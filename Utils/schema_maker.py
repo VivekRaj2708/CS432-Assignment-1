@@ -6,28 +6,27 @@ import os
 class SchemaInfere:
     def __init__(self, unique_fields, global_key, output_dir="."):
         self.unique_fields = set(unique_fields)
-        self.global_key    = global_key
-        self.output_dir    = output_dir
+        self.global_key= global_key
+        self.output_dir= output_dir
 
         self.buffer_400  = []
         self.buffer_1000 = []
 
-        self.entities     = defaultdict(set)
-        self.fd           = defaultdict(set)
+        self.entities= defaultdict(set)
+        self.fd= defaultdict(set)
         self.foreign_keys = set()
-        self.m2m          = set()
+        self.m2m= set()
 
-        self.all_records  = []   # full copy kept for operation generation
+        self.all_records = []   # full copy kept for operation generation
 
         self._schema_snapshot = {}   #{table_name: set(columns)}
 
-        #Tracks which Primary Key(PK) have already been INSERTed per table.
-        #1st time a PK value is seen → INSERT, after that → UPDATE.
+        #Tracks which Primary Key(PK) have already been INSERTed for each table.
+        #1st time a PK value is seen it insertes, after that it updates.
         self._seen_pks = defaultdict(set)
         self._all_ops_log = []
 
     #conflict resolver, resolves ambigiuty of column in which table
-
     def resolve_conflicts(self):
         column_owner = {}
 
@@ -49,10 +48,10 @@ class SchemaInfere:
     #Data ingestion
 
     def queue_reader(self, rec_queue):
-        # create/add-> schema learning + INSERT
-        # change-> UPDATE
-        # remove-> DELETE
-        # get-> SELECT
+        # create/add-> schema learning and insert
+        # change-> update
+        # remove-> delete
+        # get-> select
         while rec_queue:
             item = rec_queue.popleft()
             if isinstance(item, tuple):
@@ -76,7 +75,7 @@ class SchemaInfere:
             else:
                 self.generate_operations(item, schema)
 
-        # Write operations_sql.json after all ops are generated
+        # make operations_sql.json after all ops are generated
         self._save_ops_json()
 
         return schema
@@ -88,12 +87,12 @@ class SchemaInfere:
 
         if len(self.buffer_400) >= 400:
             self.process_400()
-            self._check_schema_changes()   # emit ALTER TABLE if anything changed
+            self._check_schema_changes()   
             self.buffer_400.clear()
 
         if len(self.buffer_1000) >= 1000:
             self.process_1000()
-            self._check_schema_changes()   # emit ALTER TABLE if anything changed
+            self._check_schema_changes()   
             self.buffer_1000.clear()
 
     def flush(self):
@@ -143,7 +142,7 @@ class SchemaInfere:
 
     def process_1000(self):
         col_vals = defaultdict(list)
-        is_list  = defaultdict(bool)
+        is_list = defaultdict(bool)
 
         for rec in self.buffer_1000:
             for col, val in rec.items():
@@ -193,7 +192,7 @@ class SchemaInfere:
 
         # Junction tables
         pk_to_tbl = {key.replace("_id", "").lower(): key for key in all_keys}
-        # reverse: table_name -> pk
+        # reverse: table_name to pk
         tbl_to_pk = {v.replace("_id", "").lower(): v for v in all_keys}
         col_to_tbl = {}
         for tname, cols in snapshot.items():
@@ -247,9 +246,9 @@ class SchemaInfere:
 
     def build_schema(self):
         clean_entities = self.resolve_conflicts()
-        tables         = self.build_tables(clean_entities)
+        tables= self.build_tables(clean_entities)
         junction_tables = self.build_junction_tables(tables)
-        tables          = self.attach_foreign_keys(tables, junction_tables)
+        tables= self.attach_foreign_keys(tables, junction_tables)
         tables.update(junction_tables)
 
         schema = {
@@ -263,22 +262,22 @@ class SchemaInfere:
         return schema
 
     def build_tables(self, clean_entities):
-        tables   = {}
-        all_keys = self.unique_fields | set(clean_entities.keys())
+        tables= {}
+        all_keys= self.unique_fields | set(clean_entities.keys())
 
         for key in all_keys:
-            attrs      = clean_entities.get(key, set())
+            attrs= clean_entities.get(key, set())
             table_name = key.replace("_id", "").lower()
             tables[table_name] = {
-                "primary_key":  key,
-                "columns":      [key] + list(attrs),
-                "foreign_keys": [],
+                "primary_key":key,
+                "columns":[key] + list(attrs),
+                "foreign_keys":[],
             }
         return tables
 
     def build_junction_tables(self, tables):
         junction_tables = {}
-        col_to_table    = {td["primary_key"]: tn for tn, td in tables.items()}
+        col_to_table= {td["primary_key"]: tn for tn, td in tables.items()}
 
         for list_col in self.m2m:
             if list_col not in self.unique_fields:
@@ -295,11 +294,11 @@ class SchemaInfere:
             jname = "_".join(sorted([owner_table, ref_table]))
             junction_tables[jname] = {
                 "primary_key":  None,
-                "columns":      [owner_key, list_col],
-                "foreign_keys": [
+                "columns":[owner_key, list_col],
+                "foreign_keys":[
                     {"column": owner_key, "references_table": owner_table,
                      "references_column": owner_key},
-                    {"column": list_col,  "references_table": ref_table,
+                    {"column": list_col, "references_table": ref_table,
                      "references_column": list_col},
                 ],
                 "is_junction": True,
@@ -328,9 +327,9 @@ class SchemaInfere:
             ref_t = pk_to_table.get(ref_key)
             if owner and ref_t:
                 tables[owner]["foreign_keys"].append({
-                    "column":            fk_col,
-                    "references_table":  ref_t,
-                    "references_column": ref_key,
+                    "column":fk_col,
+                    "references_table":ref_t,
+                    "references_column":ref_key,
                 })
         return tables
 
@@ -363,8 +362,8 @@ class SchemaInfere:
 #CRUD Events
     def _handle_crud_event(self, event, record, schema):
         global_key_val = record.get(self.global_key)
-        tables         = schema['tables']
-        ops            = []
+        tables= schema['tables']
+        ops= []
 
         columns_hint = record.get('COLUMNS')   # list of cols requested in GET
         scalar_record = {
@@ -380,7 +379,7 @@ class SchemaInfere:
 
             if event == 'add':
                 columns = [c for c in table_def['columns'] if c in scalar_record]
-                values  = [scalar_record[c] for c in columns]
+                values = [scalar_record[c] for c in columns]
                 if columns:
                     if pk_val not in self._seen_pks[table_name]:
                         self._seen_pks[table_name].add(pk_val)
@@ -440,7 +439,7 @@ class SchemaInfere:
         if not columns:
             return None
 
-        # First time we see this PK value → INSERT, subsequent → UPDATE
+        # First time we see this PK value then insert, next times we update
         if pk_val not in self._seen_pks[table_name]:
             self._seen_pks[table_name].add(pk_val)
             op_type = "INSERT"
@@ -448,19 +447,19 @@ class SchemaInfere:
             op_type = "UPDATE"
 
         op = {
-            "type":       op_type,
-            "table_name": table_name,
-            "columns":    columns,
-            "values":     values,
+            "type":op_type,
+            "table_name":table_name,
+            "columns":columns,
+            "values":values,
         }
         if global_key_val is not None:
             op[self.global_key] = global_key_val
         return op
 
     def _generate_junction_ops(self, record, table_name, table_def):
-        ops        = []
-        list_col   = None
-        scalar_col = None
+        ops= []
+        list_col= None
+        scalar_col= None
 
         for col in table_def["columns"]:
             val = record.get(col)
@@ -475,10 +474,10 @@ class SchemaInfere:
         gk_val = record.get(self.global_key)
         for item in record[list_col]:
             op = {
-                "type":       "INSERT",
-                "table_name": table_name,
-                "columns":    [scalar_col, list_col],
-                "values":     [record[scalar_col], item],
+                "type":"INSERT",
+                "table_name":table_name,
+                "columns":[scalar_col, list_col],
+                "values":[record[scalar_col], item],
             }
             if gk_val is not None:
                 op[self.global_key] = gk_val
@@ -492,10 +491,10 @@ class SchemaInfere:
         for table_name, tdef in schema["tables"].items():
             cols = set(tdef["columns"])
             ops.append({
-                "type":       "CREATE",
+                "type":"CREATE",
                 "table_name": table_name,
-                "columns":    tdef["columns"],
-                "sql":        self._render_create_sql(table_name, cols, tdef),
+                "columns":tdef["columns"],
+                "sql":self._render_create_sql(table_name, cols, tdef),
             })
         self._log_operations(ops)
 
@@ -507,15 +506,15 @@ class SchemaInfere:
         col_lines = []
         for col in sorted(cols):
             if col == pk:
-                col_lines.append(f"  {col} VARCHAR(255) PRIMARY KEY")
+                col_lines.append(f"{col} VARCHAR(255) PRIMARY KEY")
             else:
-                col_lines.append(f"  {col} VARCHAR(255)")
+                col_lines.append(f"{col} VARCHAR(255)")
 
         # Add FK constraints if available
         if tdef:
             for fk in tdef.get("foreign_keys", []):
                 col_lines.append(
-                    f"  FOREIGN KEY ({fk['column']}) "
+                    f" FOREIGN KEY ({fk['column']}) "
                     f"REFERENCES {fk['references_table']}({fk['references_column']})"
                 )
 
@@ -523,11 +522,11 @@ class SchemaInfere:
         return f"CREATE TABLE IF NOT EXISTS {table_name} (\n{body}\n);"
 
     def _render_sql_for_op(self, op):
-        t    = op.get('type', '').upper()
-        tbl  = op.get('table_name', '')
+        t= op.get('type', '').upper()
+        tbl= op.get('table_name', '')
         cols = op.get('columns', [])
         vals = op.get('values', [])
-        whr  = op.get('where', {})
+        whr = op.get('where', {})
 
         def q(v):
             return str(v) if isinstance(v, (int, float)) else f"'{v}'"
@@ -584,11 +583,11 @@ class SchemaInfere:
             sql = self._render_sql_for_op(op)
 
             entry = {
-                'type':        t.lower(),
-                'entity':      tbl,
-                'sql':         sql,
-                'description': f'{t.capitalize()} on {tbl}',
-                'query_index': idx,
+                'type':t.lower(),
+                'entity':tbl,
+                'sql':sql,
+                'description':f'{t.capitalize()} on {tbl}',
+                'query_index':idx,
             }
             # Carry through the global key if present
             gk = op.get(self.global_key)
@@ -599,16 +598,16 @@ class SchemaInfere:
 
         output = {
             'metadata': {
-                'generated_at':           datetime.now().isoformat(),
-                'total_queries':          total,
-                'valid_queries':          total,
+                'generated_at':datetime.now().isoformat(),
+                'total_queries':total,
+                'valid_queries':total,
                 'generated_sql_statements': total,
-                'by_type':                dict(counts),
-                'errors':                 0,
-                'warnings':               0,
+                'by_type':dict(counts),
+                'errors':0,
+                'warnings':0,
             },
-            'errors':            [],
-            'warnings':          [],
+            'errors':[],
+            'warnings':[],
             'generated_queries': generated_queries,
         }
 

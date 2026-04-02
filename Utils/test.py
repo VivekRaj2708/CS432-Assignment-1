@@ -226,13 +226,13 @@ def parse_sse(text):
     return init_config, records
 
 
-init_config, records = parse_sse(RAW)
+init_config,records = parse_sse(RAW)
 
-global_key    = next(k for k, v in init_config.items() if v.get("global_key") == "true")
+global_key = next(k for k, v in init_config.items() if v.get("global_key") == "true")
 unique_fields = [k for k, v in init_config.items()
                  if v.get("unique") == "true" and k != global_key]
 
-print(f"Global key   : {global_key}")
+print(f"Global key : {global_key}")
 print(f"Unique fields: {unique_fields}")
 print(f"Total records: {len(records)}")
 
@@ -240,9 +240,9 @@ print(f"Total records: {len(records)}")
 from collections import deque as _dq
 records = _dq(("create", r) for r in records)
 extra = [
-    ("get",    {"student_id": "S1119", "username": "michaelcooper", "COLUMNS": ["instructor_id"]}),
-    ("add",    {"time_slot_id": "T601", "day": "Friday", "start_time": "9:00", "end_time": "9:50", "username": "brittanybailey"}),
-    ("remove", {"time_slot_id": "T776", "username": "jwilliams"}),
+    ("get",{"student_id": "S1119", "username": "michaelcooper", "COLUMNS": ["instructor_id"]}),
+    ("add",{"time_slot_id": "T601", "day": "Friday", "start_time": "9:00", "end_time": "9:50", "username": "brittanybailey"}),
+    ("remove",{"time_slot_id": "T776", "username": "jwilliams"}),
     ("change", {"course_id": "CS9662", "credits": 1, "username": "nberry"}),
 ]
 records.extend(extra)
@@ -258,41 +258,37 @@ engine = SchemaInfere(
 schema = engine.queue_reader(records)
 
 
-print("\n=== TABLES ===")
+print("\n TABLES ")
 for tname, tdef in schema["tables"].items():
-    pk   = tdef.get("primary_key", "composite")
+    pk = tdef.get("primary_key", "composite")
     cols = tdef["columns"]
-    fks  = tdef["foreign_keys"]
-    tag  = " [junction]" if tdef.get("is_junction") else ""
+    fks= tdef["foreign_keys"]
+    tag = " [junction]" if tdef.get("is_junction") else ""
     print(f"\n  {tname}{tag}")
-    print(f"    PK   : {pk}")
-    print(f"    cols : {cols}")
+    print(f"PK : {pk}")
+    print(f"cols : {cols}")
     if fks:
         for fk in fks:
-            print(f"    FK   : {fk}")
+            print(f"FK : {fk}")
 
-print("\n=== FUNCTIONAL DEPENDENCIES ===")
+print("\n FUNCTIONAL DEPENDENCIES ")
 for key, deps in schema["functional_dependencies"].items():
-    print(f"  {key} -> {deps}")
+    print(f"{key} -> {deps}")
 
-print("\n=== FOREIGN KEYS ===")
+print("\n FOREIGN KEYS ")
 if schema["foreign_keys"]:
     for fk in schema["foreign_keys"]:
-        print(f"  {fk}")
+        print(f"{fk}")
 else:
-    print("  (none detected)")
+    print("(none detected)")
 
-print("\n=== MANY-TO-MANY ===")
+print("\n MANY-TO-MANY ")
 print(f"  {schema['many_to_many']}")
 
-print("\n=== FIRST 10 OPERATIONS FROM SSE DATA ===")
+print("\n FIRST 10 OPERATIONS FROM SSE DATA ")
 import json as _j
 with open("operations.log.") as f:
     for i, line in enumerate(f):
         if i >= 10:
             break
-        print(f"  {line.strip()}")
-
-print("\nDone.")
-print("  schema.json      -> full inferred schema")
-print("  operations.log.   -> one operation per line for every SSE record")
+        print(f"{line.strip()}")
